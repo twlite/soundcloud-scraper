@@ -13,7 +13,7 @@ declare module 'soundcloud-scraper' {
         }
 
         function validateURL(link: string): boolean;
-        function getSongInfo(link: string): SongData;
+        function getSongInfo(link: string): Promise<SongData>;
     }
 
     export = SouncloudScraper;
