@@ -1,0 +1,12 @@
+{
+  "name": "soundcloud-scraper",
+  "version": "1.0.0",
+  "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL",
+  "main": "index.js",
+  "repository": "https://github.com/Androz2091/soundcloud-scraper",
+  "author": "Androz2091 <androz2091@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jsdom": "^16.4.0"
+  }
+}
