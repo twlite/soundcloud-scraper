@@ -3,13 +3,21 @@ declare module 'soundcloud-scraper' {
     namespace SouncloudScraper {
         interface SongData {
             title: string,
-            author: string,
+            author: {
+                name: string,
+                followers: number,
+                verified: boolean,
+                createdAt: Date,
+                avatarURL: string,
+                profile: string
+            },
             duration: number,
             genre: string,
             playCount: number,
             commentsCount: number,
             likeCount: number,
-            thumbnail: string
+            thumbnail: string,
+            publishedAt: Date
         }
 
         function validateURL(link: string): boolean;

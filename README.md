@@ -28,14 +28,22 @@ console.log(scraper.validateURL('https://google.com'));
 scraper.getSongInfo('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release').then(console.log);
 /*
 {
-    title: 'Alan Walker - Fade [NCS Release]',
-    author: 'NCS',
-    duration: 'PT00H04M24S',
-    genre: 'Electro House',
-    playCount: 42970864,
-    commentsCount: 16932,
-    likeCount: 616519,
-    thumbnail: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-t500x500.jpg'
+  title: 'Alan Walker - Fade [NCS Release]',
+  author: {
+    name: 'NCS',
+    followers: 1299216,
+    verified: false,
+    createdAt: 2012-04-29T12:00:22.000Z,
+    avatarURL: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-large.jpg',
+    profile: 'https://soundcloud.com/nocopyrightsounds'
+  },
+  duration: 264000,
+  genre: 'Electro House',
+  playCount: 42973193,
+  commentsCount: 16936,
+  likeCount: 616538,
+  thumbnail: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-t500x500.jpg',
+  publishedAt: 2014-11-19T16:40:24.000Z
 }
 */
 ```
