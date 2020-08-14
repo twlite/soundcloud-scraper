@@ -25,7 +25,7 @@ console.log(scraper.validateURL('https://soundcloud.com/nocopyrightsounds/alan-w
 console.log(scraper.validateURL('https://google.com'));
 // false
 
-console.log(scraper.getSongInfos('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release'));
+scraper.getSongInfo('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release').then(console.log);
 /*
 {
     title: 'Alan Walker - Fade [NCS Release]',
