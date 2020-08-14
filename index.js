@@ -1,10 +1,17 @@
 const fetch = require('node-fetch');
 const JSDOM = require('jsdom').JSDOM;
 
-module.exports.validateURL = (url) => /^https?:\/\/(soundcloud\.com|snd\.sc)\/(.*)$/.test(url);
+const parseTime = (duration) => {
+    const hours = duration.substr(2, 2);
+    const minutes = duration.substr(5, 2);
+    const seconds = duration.substr(8, 2);
+    return (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000);
+};
 
-module.exports.getSongInfo = async (url) => {
-    const res = await fetch(url);
+module.exports.validateURL = (link) => /^https?:\/\/(soundcloud\.com|snd\.sc)\/(.*)$/.test(link);
+
+module.exports.getSongInfo = async (link) => {
+    const res = await fetch(link);
     const sourceHTML = await res.text();
     const dom = new JSDOM(sourceHTML);
     const document = dom.window.document;
@@ -12,7 +19,7 @@ module.exports.getSongInfo = async (url) => {
     return {
         title: headerH1.children[0].textContent,
         author: headerH1.children[1].textContent,
-        duration: document.querySelector('meta[itemprop="duration"]').attributes.item(1).value,
+        duration: parseTime(document.querySelector('meta[itemprop="duration"]').attributes.item(1).value),
         genre: document.querySelector('meta[itemprop="genre"]').attributes.item(1).value,
         playCount: parseInt(document.querySelectorAll('meta[property="soundcloud:play_count"]')[0].attributes.item(1).value),
         commentsCount: parseInt(document.querySelectorAll('meta[property="soundcloud:comments_count"]')[0].attributes.item(1).value),
