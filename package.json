@@ -6,6 +6,7 @@
   "repository": "https://github.com/Androz2091/soundcloud-scraper",
   "author": "Androz2091 <androz2091@gmail.com>",
   "license": "MIT",
+  "types": "./index.d.ts",
   "dependencies": {
     "jsdom": "^16.4.0"
   }
