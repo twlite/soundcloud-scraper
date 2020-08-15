@@ -11,8 +11,11 @@ module.exports.validateURL = (link) => Util.validateURL(link);
 /**
  * Returns soundcloud song info
  * @param {string} link Song url
+ * @param {object} options Fetch options
+ * @param {boolean} [options.recommended] Set it to true if you want recommended songs
+ * @param {boolean} [options.comments] Set it to true if you want comments
  */
-module.exports.getSongInfo = async (link) => {
+module.exports.getSongInfo = async (link, ops = { recommended: false, comments: false }) => {
     if (!Util.validateURL(link)) throw new Error("Invalid url");
 
     const sourceHTML = await Util.parseHTML(link);
@@ -24,7 +27,7 @@ module.exports.getSongInfo = async (link) => {
     const parsed = scripts[scripts.length - 1].textContent;
     const findFollowers = parsed.split('"followers_count":');
 
-    return {
+    let obj = {
         title: headerH1.children[0].textContent,
         author: new User({
             name: headerH1.children[1].textContent,
@@ -42,9 +45,11 @@ module.exports.getSongInfo = async (link) => {
         thumbnail: document.querySelectorAll('meta[property="og:image"]')[0].attributes.item(1).value,
         publishedAt: new Date(time.textContent),
         embed: document.querySelector('meta[itemprop="embedUrl"]').attributes.item(1).value,
-        comments: Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML),
-        recommendedSongs: await this.getRecommendedSongs(link)
-    }
+        comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
+        recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : []
+    };
+
+    return obj;
 };
 
 /**

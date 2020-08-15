@@ -48,7 +48,7 @@ class Util {
                 followers: 0,
                 createdAt: null,
                 avatarURL: null,
-                profile: url
+                profile: `https://soundcloud.com${url}`
             }, false);
             arr.push(obj);
         });

@@ -60,8 +60,13 @@ declare module 'soundcloud-scraper' {
             type: "track" | "user" | "playlist" | "all"
         }
 
+        interface FetchOptions {
+            recommended?: boolean;
+            comments?: boolean;
+        }
+
         function validateURL(link: string): boolean;
-        function getSongInfo(link: string): Promise<SongData>;
+        function getSongInfo(link: string, options?: FetchOptions): Promise<SongData>;
         function getUserInfo(link: string): Promise<User>;
         function search(query: string, type: "track" | "user" | "playlist" | "all"): Promise<searchResult[]>
         function getPlaylist(link: string): Promise<PlaylistData[]>;
