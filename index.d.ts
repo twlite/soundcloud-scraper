@@ -15,6 +15,7 @@ declare module 'soundcloud-scraper' {
             public readonly createdTimestamp: string | null;
             public readonly age: number;
             public toString(): string;
+            private _patch(data?: object, cache?: boolean): any;
         }
 
         interface Comment {
@@ -36,8 +37,26 @@ declare module 'soundcloud-scraper' {
             comments: Comment[];
         }
 
+        interface PlaylistData {
+            title: string;
+            url: string;
+            author: User,
+            publishedAt: Date,
+            duration: number;
+            genre: string[]
+        }
+
+        interface searchResult {
+            url: string;
+            title: string;
+            type: "track" | "user" | "playlist" | "all"
+        }
+
         function validateURL(link: string): boolean;
         function getSongInfo(link: string): Promise<SongData>;
+        function getUserInfo(link: string): Promise<User>;
+        function search(query: string, type: "track" | "user" | "playlist" | "all"): Promise<searchResult[]>
+        function getPlaylist(link: string): Promise<PlaylistData[]>;
     }
 
     export = SouncloudScraper;
