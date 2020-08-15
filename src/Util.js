@@ -113,6 +113,34 @@ class Util {
         return obj;
     }
 
+    static parseSimilarResults(htmlChunks) {
+        const arr = [];
+        for (let i = 0; i < htmlChunks.length; i++) {
+            const uri = htmlChunks[i].split('href="')[1].split('">')[0];
+            const name = htmlChunks[i].split(`${uri}">`)[1].split('</a>')[0];
+            const authorURL = htmlChunks[i].split('by <a href="')[1].split('">')[0];
+            const author = htmlChunks[i].split(`${authorURL}">`)[1].split('</a>')[0];
+            const published = htmlChunks[i].split('pubdate>')[1].split('</time>')[0];
+
+            let obj = {
+                title: name,
+                url: `https://soundcloud.com${uri}`,
+                publishedAt: new Date(published),
+                author: store.get(author) || new User({
+                    name: author,
+                    followers: 0,
+                    createdAt: null,
+                    avatarURL: null,
+                    profile: authorURL
+                }, false)
+            };
+
+            arr.push(obj);
+        }
+
+        return arr;
+    }
+
 }
 
 module.exports = Util;

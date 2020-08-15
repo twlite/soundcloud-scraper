@@ -42,7 +42,8 @@ module.exports.getSongInfo = async (link) => {
         thumbnail: document.querySelectorAll('meta[property="og:image"]')[0].attributes.item(1).value,
         publishedAt: new Date(time.textContent),
         embed: document.querySelector('meta[itemprop="embedUrl"]').attributes.item(1).value,
-        comments: Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML)
+        comments: Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML),
+        recommendedSongs: await this.getRecommendedSongs(link)
     }
 };
 
@@ -132,4 +133,31 @@ module.exports.getPlaylist = async (link) => {
         arr.push(parsed);
     }
     return arr;
+}
+
+/**
+ * Returns recommended songs
+ * @param {string} link Soundcloud video url
+ */
+module.exports.getRecommendedSongs = async (link) => {
+    if (!Util.validateURL(link)) throw new Error("Invalid url.");
+    
+    try {
+        const sourceHTML = await Util.parseHTML(`${link}/recommended`);
+        const dom = Util.getDom(sourceHTML);
+        const document = dom.window.document;
+
+        const section = document.getElementsByTagName('section');
+        if (!section.length) return [];
+        const partials = sourceHTML.split('<h2 itemprop="name">');
+        partials.shift();
+        const chunks = [];
+        partials.forEach(x => {
+            const d = x.split('</article>')[0].trim();
+            chunks.push(d);
+        });
+        return Util.parseSimilarResults(chunks);
+    } catch(e) {
+        return [];
+    }
 }
