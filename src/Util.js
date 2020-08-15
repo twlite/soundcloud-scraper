@@ -131,7 +131,7 @@ class Util {
                     followers: 0,
                     createdAt: null,
                     avatarURL: null,
-                    profile: authorURL
+                    profile: `https://soundcloud.com${authorURL}`
                 }, false)
             };
 
