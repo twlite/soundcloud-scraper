@@ -138,7 +138,7 @@ module.exports.getPlaylist = async (link) => {
         arr.push(parsed);
     }
     return arr;
-}
+};
 
 /**
  * Returns recommended songs
@@ -165,4 +165,12 @@ module.exports.getRecommendedSongs = async (link) => {
     } catch(e) {
         return [];
     }
-}
+};
+
+/**
+ * Fetches soundcloud api key
+ * @returns {Promise<string> | null}
+ */
+module.exports.fetchSoundcloudKey = async () => {
+    return await Util.keygen();
+};

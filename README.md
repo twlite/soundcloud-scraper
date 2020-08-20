@@ -10,9 +10,6 @@ npm install soundcloud-scraper --save
 
 ## TO-DO
 
-* Support for SoundCloud playlists.
-* Support for SoundCloud albums.
-* Support for SoundCloud search.
 * Add library tests (with `jest` or `mocha`).
 
 ## Example
@@ -65,6 +62,27 @@ scraper.getSongInfo('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-n
 */
 ```
 
+# API
+## getSongInfo(trackURL)
+This method returns informations related to the given track url.
+
+## getUserInfo(profileURL)
+This method returns user information of the given url.
+
+## getPlaylist(playListURL)
+This method returns songs array of the given playlist url.
+
+## search(query, type)
+This method can be used to search tracks, users, or playlists on soundcloud.
+
+## validateURL(url)
+This method validates soundcloud url.
+
+## getRecommendedSongs(trackURL)
+This method returns recommended tracks from the given track url.
+
+## fetchSoundcloudKey()
+This method fetches soundcloud api key. Returns `null` on error.
 
 # Response Samples
 ## Song Info
@@ -400,4 +418,10 @@ User {
   profile: 'https://soundcloud.com/nocopyrightsounds'
 }
 
+```
+
+## API key
+
+```xl
+dadbfccf377e10e4046853ef5ab4e9g5
 ```

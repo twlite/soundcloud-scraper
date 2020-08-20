@@ -65,12 +65,48 @@ declare module 'soundcloud-scraper' {
             comments?: boolean;
         }
 
+        /**
+         * Validates soundcloud url
+         * @param link URL to validate
+         */
         function validateURL(link: string): boolean;
+
+        /**
+         * Fetches track info
+         * @param link Track url
+         * @param options Search options
+         */
         function getSongInfo(link: string, options?: FetchOptions): Promise<SongData>;
+
+        /**
+         * Fetches user info
+         * @param link User profile url
+         */
         function getUserInfo(link: string): Promise<User>;
-        function search(query: string, type: "track" | "user" | "playlist" | "all"): Promise<searchResult[]>
+
+        /**
+         * Search something on soundcloud
+         * @param query Search query
+         * @param type Search type
+         */
+        function search(query: string, type: "track" | "user" | "playlist" | "all"): Promise<searchResult[]>;
+
+        /**
+         * Fetches tracks from a playlist
+         * @param link Playlist url
+         */
         function getPlaylist(link: string): Promise<PlaylistData[]>;
+
+        /**
+         * Fetches recommended songs
+         * @param link Track url
+         */
         function getRecommendedSongs(link: string): Promise<RecommendedSongs[]>;
+
+        /**
+         * Fetches soundcloud api key
+         */
+        function fetchSoundcloudKey(): Promise<string> | null;
     }
 
     export = SouncloudScraper;

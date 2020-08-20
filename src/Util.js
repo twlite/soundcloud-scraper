@@ -2,6 +2,8 @@ const fetch = require("node-fetch");
 const { JSDOM } = require("jsdom");
 const User = require("./User.js");
 const store = require("./Store");
+const URLREG = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+const KEYREG = /(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
 class Util {
 
@@ -139,6 +141,40 @@ class Util {
         }
 
         return arr;
+    }
+
+    static keygen() {
+        return new Promise(async resolve => {
+            try {
+                const html = await Util.parseHTML("https://soundcloud.com");
+                const res = html.split('<script crossorigin src="');
+                const urls = [];
+                let index = 0;
+                let key;
+
+                res.forEach(u => {
+                    let url = u.replace('"></script>', "");
+                    let chunk = url.split("\n")[0];
+                    if (URLREG.test(chunk)) urls.push(chunk);
+                });
+
+                while (index !== urls.length && !key) {
+                    let url = urls[index];
+                    index++;
+                    if (KEYREG.test(url)) {
+                        const data = await Util.parseHTML(url);
+                        if (data.includes(',client_id:"')) {
+                            const a = data.split(',client_id:"');
+                            key = a[1].split('"')[0];
+                            if (index === urls.length) return resolve(key);
+                        }
+                    }
+                };
+
+            } catch(e) {
+                resolve(null);
+            }
+        });
     }
 
 }
