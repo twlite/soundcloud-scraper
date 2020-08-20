@@ -167,6 +167,7 @@ class Util {
                             const a = data.split(',client_id:"');
                             key = a[1].split('"')[0];
                             if (index === urls.length) return resolve(key);
+                            return resolve(null);
                         }
                     }
                 };
