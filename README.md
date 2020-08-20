@@ -14,10 +14,15 @@ npm install soundcloud-scraper --save
 
 # Features
 `-` Lightweight
+
 `-` Typings
+
 `-` ESM support
+
 `-` Fast
+
 `-` Easy
+
 `-` Better error handling
 
 ## Example
