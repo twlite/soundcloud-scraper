@@ -12,6 +12,14 @@ npm install soundcloud-scraper --save
 
 * Add library tests (with `jest` or `mocha`).
 
+# Features
+`-` Lightweight
+`-` Typings
+`-` ESM support
+`-` Fast
+`-` Easy
+`-` Better error handling
+
 ## Example
 
 ```js
