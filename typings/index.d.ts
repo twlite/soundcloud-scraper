@@ -34,17 +34,19 @@ declare module 'soundcloud-scraper' {
         }
 
         interface SongData {
-            title: string,
-            author: User,
-            duration: number,
-            genre: string,
-            playCount: number,
-            commentsCount: number,
-            likesCount: number,
-            thumbnail: string,
-            publishedAt: Date,
+            id: string;
+            title: string;
+            author: User;
+            duration: number;
+            genre: string;
+            playCount: number;
+            commentsCount: number;
+            likesCount: number;
+            thumbnail: string;
+            publishedAt: Date;
             comments: Comment[];
             recommendedSongs: RecommendedSongs[];
+            trackURL: string;
         }
 
         interface PlaylistData {
