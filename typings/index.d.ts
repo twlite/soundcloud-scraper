@@ -106,7 +106,7 @@ declare module 'soundcloud-scraper' {
         /**
          * Fetches soundcloud api key
          */
-        function fetchSoundcloudKey(): Promise<string> | null;
+        function fetchSoundcloudKey(): Promise<string|null>;
     }
 
     export = SouncloudScraper;
