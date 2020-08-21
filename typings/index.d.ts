@@ -2,6 +2,8 @@ declare module 'soundcloud-scraper' {
 
     namespace SouncloudScraper {
 
+        import { Readable } from "stream";
+
         class User {
             public constructor(data?: object);
             public name: string | null;
@@ -107,6 +109,12 @@ declare module 'soundcloud-scraper' {
          * Fetches soundcloud api key
          */
         function fetchSoundcloudKey(): Promise<string|null>;
+
+        /**
+         * Downloads soundcloud stream
+         * @param link Soundcloud track url
+         */
+        function download(link: string): Promise<Readable>;
     }
 
     export = SouncloudScraper;

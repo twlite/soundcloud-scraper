@@ -1,6 +1,6 @@
 # SoundCloud Scraper
 
-☁️ Get basic informations about a song from a Soundcloud URL.
+☁️ Get informations about a song, user or a playlist by URL.
 
 ## Installation
 
@@ -13,17 +13,11 @@ npm install soundcloud-scraper --save
 * Add library tests (with `jest` or `mocha`).
 
 # Features
-`-` Lightweight
-
-`-` Typings
-
-`-` ESM support
-
-`-` Fast
-
-`-` Easy
-
-`-` Better error handling
+* Easy & simple
+* Fast
+* Custom search support
+* Soundcloud stream downloader
+* Soundcloud client id generator
 
 ## Example
 
@@ -96,6 +90,10 @@ This method returns recommended tracks from the given track url.
 
 ## fetchSoundcloudKey()
 This method fetches soundcloud api key. Returns `null` on error.
+
+## download(trackURL, clientID)
+This method downloads soundcloud stream. `trackURL` is required field. You can pass custom `clientID` if you have one.
+Else `soundcloud-scraper` will try to fetch `clientID` and download stream.
 
 # Response Samples
 ## Song Info

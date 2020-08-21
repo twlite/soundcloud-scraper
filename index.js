@@ -1,6 +1,7 @@
 const User = require("./src/User");
 const Util = require("./src/Util.js");
 const BASE_TRACK_SEARCH = (mode) => `https://soundcloud.com/search${mode}?q=`;
+const { Readable } = require("stream");
 
 /**
  * Validate url. Returns true if the link given matches with soundcloud url.
@@ -28,6 +29,7 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
     const findFollowers = parsed.split('"followers_count":');
 
     let obj = {
+        id: sourceHTML.split('content="soundcloud://sounds:')[1].split('">')[0],
         title: headerH1.children[0].textContent,
         author: new User({
             name: headerH1.children[1].textContent,
@@ -46,7 +48,8 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         publishedAt: new Date(time.textContent),
         embed: document.querySelector('meta[itemprop="embedUrl"]').attributes.item(1).value,
         comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
-        recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : []
+        recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : [],
+        trackURL: sourceHTML.split('},{"url":"')[1].split('","')[0]
     };
 
     return obj;
@@ -81,10 +84,10 @@ module.exports.getUserInfo = async (link) => {
  * @param {string} query query to search
  * @param {"track" | "user" | "playlist" | "all"} type Search type
  */
-module.exports.search = async (query, type="track") => {
+module.exports.search = async (query, type = "track") => {
     if (!query) throw new Error('Missing search query!');
     let path;
-    switch(type) {
+    switch (type) {
         case "track":
             path = "/sounds";
             break;
@@ -146,7 +149,7 @@ module.exports.getPlaylist = async (link) => {
  */
 module.exports.getRecommendedSongs = async (link) => {
     if (!Util.validateURL(link)) throw new Error("Invalid url.");
-    
+
     try {
         const sourceHTML = await Util.parseHTML(`${link}/recommended`);
         const dom = Util.getDom(sourceHTML);
@@ -162,7 +165,7 @@ module.exports.getRecommendedSongs = async (link) => {
             chunks.push(d);
         });
         return Util.parseSimilarResults(chunks);
-    } catch(e) {
+    } catch (e) {
         return [];
     }
 };
@@ -173,4 +176,19 @@ module.exports.getRecommendedSongs = async (link) => {
  */
 module.exports.fetchSoundcloudKey = async () => {
     return await Util.keygen();
+};
+
+/**
+ * Downloads soundcloud stream
+ * @param {string} url Soundcloud track url
+ * @param {string} clientID Soundcloud client id [optional]
+ * @returns {Promise<Readable>}
+ */
+module.exports.download = async (url, clientID) => {
+    if (!Util.validateURL(url)) throw new Error("Invalid url.");
+    const BASE = await this.getSongInfo(url);
+    if (!BASE || !BASE.trackURL) throw new Error("Couldn't parse track info.");
+
+    const stream = await Util.downloadStream(BASE.trackURL, clientID);
+    return stream;
 };

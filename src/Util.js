@@ -4,6 +4,7 @@ const User = require("./User.js");
 const store = require("./Store");
 const URLREG = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 const KEYREG = /(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+const https = require("https");
 
 class Util {
 
@@ -167,13 +168,37 @@ class Util {
                             const a = data.split(',client_id:"');
                             key = a[1].split('"')[0];
                             if (index === urls.length) return resolve(key);
-                            return resolve(null);
                         }
                     }
                 };
 
             } catch(e) {
                 resolve(null);
+            }
+        });
+    }
+
+    static downloadStream(url, clientID) {
+        return new Promise(async (resolve, reject) => {
+            if (!url) return reject("ERROR_NO_URL");
+            const CLIENT_ID = clientID ? clientID : await Util.keygen();
+            if (!CLIENT_ID) return reject("ERROR_NO_CLIENT_ID");
+
+            try {
+                let res = await fetch(`${url}?client_id=${CLIENT_ID}`, {
+                    headers: {
+                        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
+                        "Accept": "*/*",
+                        "Accept-Encoding": "gzip, deflate, br"
+                    },
+                });
+                res = await res.json();
+                if (!res.url) return reject("ERROR_NO_STREAM");
+
+                https.get(res.url, data => resolve(data));
+
+            } catch(e) {
+                reject(new Error("ERROR_URL_PARSE_FAILED"));
             }
         });
     }
