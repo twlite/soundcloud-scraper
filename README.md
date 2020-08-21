@@ -1,16 +1,10 @@
 # SoundCloud Scraper
-
 ☁️ Get informations about a song, user or a playlist by URL.
 
 ## Installation
-
 ```sh
 npm install soundcloud-scraper --save
 ```
-
-## TO-DO
-
-* Add library tests (with `jest` or `mocha`).
 
 # Features
 * Easy & simple
@@ -19,8 +13,18 @@ npm install soundcloud-scraper --save
 * Soundcloud stream downloader
 * Soundcloud client id generator
 
-## Example
+# Discord Support
+- **[AndrozDev](https://discord.gg/Qreejcu)**
+- **[Snowflake Studio ❄](https://discord.gg/VRsr5fv)**
 
+# TO-DO
+* Better response
+* Return complete data
+* Stream format selection
+* Add library tests (with `jest` or `mocha`).
+
+## Example
+## Quick Example
 ```js
 const scraper = require('soundcloud-scraper');
 
@@ -59,15 +63,25 @@ scraper.getSongInfo('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-n
       author: [User]
     },
     ...
-    {
-      content: 'eeeee',
-      createdAt: 2020-08-09T20:47:12.000Z,
-      author: [User]
     }
   ]
 }
 */
+
 ```
+
+## Downloading song
+```js
+const soundcloud = require("soundcloud-scraper");
+const fs = require("fs");
+
+soundcloud.download("https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release")
+    .then(stream => {
+        stream.pipe(fs.createWriteStream("./fade.mp3"));  
+    });
+
+```
+
 
 # API
 ## getSongInfo(trackURL)
