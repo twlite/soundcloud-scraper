@@ -169,7 +169,7 @@ module.exports.getRecommendedSongs = async (link) => {
 
 /**
  * Fetches soundcloud api key
- * @returns {Promise<string> | null}
+ * @returns {Promise<string|null>}
  */
 module.exports.fetchSoundcloudKey = async () => {
     return await Util.keygen();
