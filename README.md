@@ -1,5 +1,5 @@
 # SoundCloud Scraper
-☁️ Get informations about a song, user or a playlist by URL.
+☁️ Simple package to parse data & download audio from soundcloud for free.
 
 ## Installation
 ```sh
