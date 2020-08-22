@@ -1,9 +1,12 @@
 {
   "name": "soundcloud-scraper",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL",
   "main": "index.js",
-  "repository": "https://github.com/Androz2091/soundcloud-scraper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Androz2091/soundcloud-scraper.git"
+  },
   "author": "Androz2091 <androz2091@gmail.com>",
   "license": "MIT",
   "types": "./typings/index.d.ts",
@@ -20,5 +23,22 @@
   "dependencies": {
     "jsdom": "^16.4.0",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/Androz2091/soundcloud-scraper/issues"
+  },
+  "homepage": "https://github.com/Androz2091/soundcloud-scraper#readme",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "cd test && node index.js"
+  },
+  "keywords": [
+    "soundcloud",
+    "soundcloud-downloader",
+    "soundcloud-scraper",
+    "soundcloud-song-downloader",
+    "soundcloud-api"
+  ]
 }

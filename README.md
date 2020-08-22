@@ -19,12 +19,6 @@ npm install soundcloud-scraper --save
 - **[AndrozDev](https://discord.gg/Qreejcu)**
 - **[Snowflake Studio ❄](https://discord.gg/VRsr5fv)**
 
-# TO-DO
-* Better response
-* Return complete data
-* Stream format selection
-* Add library tests (with `jest` or `mocha`).
-
 ## Example
 ## Quick Example
 ```js

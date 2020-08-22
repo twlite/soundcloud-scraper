@@ -1,9 +1,9 @@
+import { Readable } from "stream";
+
 declare module 'soundcloud-scraper' {
 
     namespace SouncloudScraper {
-
-        import { Readable } from "stream";
-
+        
         class User {
             public constructor(data?: object);
             public name: string | null;
@@ -55,7 +55,7 @@ declare module 'soundcloud-scraper' {
             author: User,
             publishedAt: Date,
             duration: number;
-            genre: string[]
+            genre: string[];
         }
 
         interface searchResult {
