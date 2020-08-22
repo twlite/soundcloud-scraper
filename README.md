@@ -1,6 +1,8 @@
 # SoundCloud Scraper
 ☁️ Simple package to parse data & download audio from soundcloud for free.
 
+[![NPM](https://nodei.co/npm/soundcloud-scraper.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/soundcloud-scraper/)
+
 ## Installation
 ```sh
 npm install soundcloud-scraper --save
