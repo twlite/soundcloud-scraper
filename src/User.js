@@ -31,6 +31,10 @@ class User {
          * Profile url
          */
         this.profile = data.profile || null;
+        /**
+         * Profile id
+         */
+        this.urn = data.urn || null;
 
         if (cache) store.set(this.name, this);
     }

@@ -178,6 +178,18 @@ class Util {
         });
     }
 
+    static apiVersion() {
+        return new Promise(async resolve => {
+            try {
+                const html = await Util.parseHTML("https://soundcloud.com");
+                const matches = /__sc_version\s*=\s*"(?<apiVersion>[^"]+)/.exec(html);
+                return resolve(matches.groups.apiVersion);
+            } catch(e) {
+                resolve(null);
+            }
+        });
+    }
+
     static downloadStream(url, clientID) {
         return new Promise(async (resolve, reject) => {
             if (!url) return reject("ERROR_NO_URL");
