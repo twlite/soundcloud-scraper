@@ -6,9 +6,11 @@ export const {
     download,
     getSongInfo,
     getUserInfo,
+    getUserLikes,
     getPlaylist,
     search,
     validateURL,
     getRecommendedSongs,
-    fetchSoundcloudKey
+    fetchSoundcloudKey,
+    fetchSoundcloudVersion
 } = SoundCloud;

@@ -1,6 +1,7 @@
 const User = require("./src/User");
 const Util = require("./src/Util.js");
 const BASE_TRACK_SEARCH = (mode) => `https://soundcloud.com/search${mode}?q=`;
+const BASE_USER_LIKES = async (urn, clientId, limit, offset) => `https://api-v2.soundcloud.com/users/${urn}/track_likes?offset=${offset || ""}&limit=${limit || 200}&client_id=${clientId}&app_version=${await Util.apiVersion()}&app_locale=en`;
 const { Readable } = require("stream");
 
 /**
@@ -75,8 +76,20 @@ module.exports.getUserInfo = async (link) => {
         followers: parseInt(findFollowers[findFollowers.length - 1].split(',')[0]),
         createdAt: new Date(sourceHTML.split('"created_at":"')[sourceHTML.split('"created_at":"').length - 1].split('","')[0]),
         avatarURL: sourceHTML.split('"avatar_url":"')[sourceHTML.split('"avatar_url":"').length - 1].split('"')[0],
-        profile: sourceHTML.split('"permalink_url":"')[sourceHTML.split('"permalink_url":"').length - 1].split('"')[0]
+        profile: sourceHTML.split('"permalink_url":"')[sourceHTML.split('"permalink_url":"').length - 1].split('"')[0],
+        urn: parseInt(/soundcloud:users:(?<urn>\d+)/.exec(sourceHTML).groups.urn)
     });
+};
+
+/**
+ * Fetches user likes and returns info
+ * @param {string} link User profile url
+ * @returns {Promise<JSON>}
+ */
+module.exports.getUserLikes = async (link, limit) => {
+    const user = await this.getUserInfo(link);
+    const url = await BASE_USER_LIKES(user.urn, await Util.keygen(), limit);
+    return JSON.parse(await Util.parseHTML(url)).collection;
 };
 
 /**
@@ -176,6 +189,14 @@ module.exports.getRecommendedSongs = async (link) => {
  */
 module.exports.fetchSoundcloudKey = async () => {
     return await Util.keygen();
+};
+
+/**
+ * Fetches soundcloud api version
+ * @returns {Promise<string|null>}
+ */
+module.exports.fetchSoundcloudVersion = async () => {
+    return await Util.apiVersion();
 };
 
 /**

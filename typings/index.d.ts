@@ -16,6 +16,7 @@ declare module 'soundcloud-scraper' {
             public readonly avatar: string | null;
             public readonly createdTimestamp: string | null;
             public readonly age: number;
+            public urn: number;
             public toString(): string;
             private _patch(data?: object, cache?: boolean): any;
         }
@@ -89,6 +90,12 @@ declare module 'soundcloud-scraper' {
         function getUserInfo(link: string): Promise<User>;
 
         /**
+         * Fetches user likes
+         * @param link User profile url
+         */
+        function getUserLikes(link: string, limit: number): Promise<JSON>;
+
+        /**
          * Search something on soundcloud
          * @param query Search query
          * @param type Search type
@@ -111,6 +118,11 @@ declare module 'soundcloud-scraper' {
          * Fetches soundcloud api key
          */
         function fetchSoundcloudKey(): Promise<string|null>;
+
+        /**
+         * Fetches soundcloud api version
+         */
+        function fetchSoundcloudVersion(): Promise<string|null>;
 
         /**
          * Downloads soundcloud stream
