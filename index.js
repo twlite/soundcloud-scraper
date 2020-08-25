@@ -77,7 +77,7 @@ module.exports.getUserInfo = async (link) => {
         createdAt: new Date(sourceHTML.split('"created_at":"')[sourceHTML.split('"created_at":"').length - 1].split('","')[0]),
         avatarURL: sourceHTML.split('"avatar_url":"')[sourceHTML.split('"avatar_url":"').length - 1].split('"')[0],
         profile: sourceHTML.split('"permalink_url":"')[sourceHTML.split('"permalink_url":"').length - 1].split('"')[0],
-        urn: parseInt(/soundcloud:users:(?<urn>\d+)/.exec(sourceHTML)?.groups?.urn)
+        urn: parseInt(/soundcloud:users:(?<urn>\d+)/.exec(sourceHTML).groups.urn)
     });
 };
 
@@ -89,7 +89,7 @@ module.exports.getUserInfo = async (link) => {
 module.exports.getUserLikes = async (link, limit) => {
     const user = await this.getUserInfo(link);
     const url = await BASE_USER_LIKES(user.urn, await Util.keygen(), limit);
-    return JSON.parse(await Util.parseHTML(url))?.collection;
+    return JSON.parse(await Util.parseHTML(url)).collection;
 };
 
 /**
