@@ -4,6 +4,8 @@ const BASE_TRACK_SEARCH = (mode) => `https://soundcloud.com/search${mode}?q=`;
 const BASE_USER_LIKES = async (urn, clientId, limit, offset) => `https://api-v2.soundcloud.com/users/${urn}/track_likes?offset=${offset || ""}&limit=${limit || 200}&client_id=${clientId}&app_version=${await Util.apiVersion()}&app_locale=en`;
 const { Readable } = require("stream");
 
+
+
 /**
  * Validate url. Returns true if the link given matches with soundcloud url.
  * @param {string} link Any url to validate
@@ -29,6 +31,16 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
     const parsed = scripts[scripts.length - 1].textContent;
     const findFollowers = parsed.split('"followers_count":');
 
+    const safeSelector = str => {
+        const res = document.querySelector(str)
+        return res && res.attributes.item(1).value
+    }
+    
+    const safeSelectorAll = str => {
+        const res = document.querySelectorAll(str)[0]
+        return res && res.attributes.item(1).value
+    }
+    
     let obj = {
         id: sourceHTML.split('content="soundcloud://sounds:')[1].split('">')[0],
         title: headerH1.children[0].textContent,
@@ -39,15 +51,15 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
             avatarURL: sourceHTML.split('"avatar_url":"')[sourceHTML.split('"avatar_url":"').length - 1].split('"')[0],
             profile: sourceHTML.split('"permalink_url":"')[sourceHTML.split('"permalink_url":"').length - 1].split('"')[0]
         }),
-        description: document.querySelector('meta[property="og:description"]').attributes.item(1).value,
-        duration: Util.parseTime(document.querySelector('meta[itemprop="duration"]').attributes.item(1).value),
-        genre: document.querySelector('meta[itemprop="genre"]').attributes.item(1).value,
-        playCount: parseInt(document.querySelectorAll('meta[property="soundcloud:play_count"]')[0].attributes.item(1).value),
-        commentsCount: parseInt(document.querySelectorAll('meta[property="soundcloud:comments_count"]')[0].attributes.item(1).value),
-        likesCount: parseInt(document.querySelectorAll('meta[property="soundcloud:like_count"]')[0].attributes.item(1).value),
-        thumbnail: document.querySelectorAll('meta[property="og:image"]')[0].attributes.item(1).value,
+        description: safeSelector('meta[property="og:description"]'),
+        duration: Util.parseTime(safeSelector('meta[itemprop="duration"]')),
+        genre: safeSelector('meta[itemprop="genre"]'),
+        playCount: parseInt(safeSelectorAll('meta[property="soundcloud:play_count"]')),
+        commentsCount: parseInt(safeSelectorAll('meta[property="soundcloud:comments_count"]')),
+        likesCount: parseInt(safeSelectorAll('meta[property="soundcloud:like_count"]')),
+        thumbnail: safeSelectorAll('meta[property="og:image"]'),
         publishedAt: new Date(time.textContent),
-        embed: document.querySelector('meta[itemprop="embedUrl"]').attributes.item(1).value,
+        embed: safeSelector('meta[itemprop="embedUrl"]'),
         comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
         recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : [],
         trackURL: sourceHTML.split('},{"url":"')[1].split('","')[0]
