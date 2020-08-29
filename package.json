@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-scraper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL",
   "main": "index.js",
   "repository": {
