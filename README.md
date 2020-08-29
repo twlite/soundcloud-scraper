@@ -105,6 +105,12 @@ This method fetches soundcloud api key. Returns `null` on error.
 This method downloads soundcloud stream. `trackURL` is required field. You can pass custom `clientID` if you have one.
 Else `soundcloud-scraper` will try to fetch `clientID` and download stream.
 
+## getUserLikes(profileURL, limit)
+This method fetches user likes and returns info.
+
+## fetchSoundcloudVersion()
+This method returns soundcloud api version.
+
 # Response Samples
 ## Song Info
 
