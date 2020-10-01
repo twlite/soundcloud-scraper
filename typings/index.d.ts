@@ -77,6 +77,19 @@ declare module 'soundcloud-scraper' {
         function validateURL(link: string): boolean;
 
         /**
+         * Cache
+         */
+        function getStore(): Map;
+
+        /**
+         * Returns stream url of a song
+         * @param songURL Song url to parse stream
+         * @param clientID Soundcloud client id
+         * @param parsedURL If the track url is already parsed
+         */
+        function getStreamURL(songURL: string, clientID?: string, parsedURL?: boolean): Promise<string>;
+
+        /**
          * Fetches track info
          * @param link Track url
          * @param options Search options
@@ -127,8 +140,9 @@ declare module 'soundcloud-scraper' {
         /**
          * Downloads soundcloud stream
          * @param link Soundcloud track url
+         * @param clientID Custom client id
          */
-        function download(link: string): Promise<Readable>;
+        function download(link: string, clientID? :string): Promise<Readable>;
     }
 
     export = SouncloudScraper;

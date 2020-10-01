@@ -80,36 +80,42 @@ soundcloud.download("https://soundcloud.com/nocopyrightsounds/alan-walker-fade-n
 
 
 # API
-## getSongInfo(trackURL)
+## getSongInfo(trackURL: string, options)
 This method returns informations related to the given track url.
 
-## getUserInfo(profileURL)
+## getUserInfo(profileURL: string)
 This method returns user information of the given url.
 
-## getPlaylist(playListURL)
+## getPlaylist(playListURL: string)
 This method returns songs array of the given playlist url.
 
-## search(query, type)
+## search(query: string, type: string)
 This method can be used to search tracks, users, or playlists on soundcloud.
 
-## validateURL(url)
+## validateURL(url: string)
 This method validates soundcloud url.
 
-## getRecommendedSongs(trackURL)
+## getRecommendedSongs(trackURL: string)
 This method returns recommended tracks from the given track url.
 
 ## fetchSoundcloudKey()
 This method fetches soundcloud api key. Returns `null` on error.
 
-## download(trackURL, clientID)
+## download(trackURL: string, clientID: string)
 This method downloads soundcloud stream. `trackURL` is required field. You can pass custom `clientID` if you have one.
 Else `soundcloud-scraper` will try to fetch `clientID` and download stream.
 
-## getUserLikes(profileURL, limit)
+## getUserLikes(profileURL: string, limit: number)
 This method fetches user likes and returns info.
 
 ## fetchSoundcloudVersion()
 This method returns soundcloud api version.
+
+## getStore()
+This method returns cache of soundcloud scraper.
+
+## getStreamURL(songURL: string, clientID: string, parsedURL: boolean)
+This method returns actual stream url of the song. Set `parsedURL` to `true` if track url is parsed from song url.
 
 # Response Samples
 ## Song Info

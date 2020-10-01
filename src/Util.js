@@ -45,7 +45,7 @@ class Util {
                 content,
                 createdAt: new Date(timestamp),
             };
-            if (store.get(username)) obj.author = store.get(username);
+            if (store.has(username)) obj.author = store.get(username);
             else obj.author = new User({
                 name: username,
                 followers: 0,
@@ -104,7 +104,7 @@ class Util {
             genre: genre ? genre.split('">')[0].split(' &amp; ') : []
         }
 
-        if (store.get(username)) obj.author = store.get(username);
+        if (store.has(username)) obj.author = store.get(username);
         else obj.author = new User({
             name: username,
             followers: 0,
@@ -167,7 +167,10 @@ class Util {
                         if (data.includes(',client_id:"')) {
                             const a = data.split(',client_id:"');
                             key = a[1].split('"')[0];
-                            if (index === urls.length) return resolve(key);
+                            if (index === urls.length) {
+                                store.set("SOUNDCLOUD_API_KEY", key);
+                                return resolve(store.get("SOUNDCLOUD_API_KEY"));
+                            };
                         }
                     }
                 };
@@ -190,14 +193,15 @@ class Util {
         });
     }
 
-    static downloadStream(url, clientID) {
+    static fetchSongStreamURL(songURL, clientID) {
         return new Promise(async (resolve, reject) => {
-            if (!url) return reject("ERROR_NO_URL");
+            if (!songURL) return reject("ERROR_NO_URL");
+            if (!clientID && store.has("SOUNDCLOUD_API_KEY")) clientID = store.get("SOUNDCLOUD_API_KEY");
             const CLIENT_ID = clientID ? clientID : await Util.keygen();
             if (!CLIENT_ID) return reject("ERROR_NO_CLIENT_ID");
 
             try {
-                let res = await fetch(`${url}?client_id=${CLIENT_ID}`, {
+                let res = await fetch(`${songURL}?client_id=${CLIENT_ID}`, {
                     headers: {
                         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
                         "Accept": "*/*",
@@ -205,12 +209,25 @@ class Util {
                     },
                 });
                 res = await res.json();
-                if (!res.url) return reject("ERROR_NO_STREAM");
+                if (!res.url) return reject("ERROR_NO_STREAM_URL");
 
-                https.get(res.url, data => resolve(data));
+                resolve(res.url);
 
             } catch(e) {
                 reject(new Error("ERROR_URL_PARSE_FAILED"));
+            }
+        });
+    }
+
+    static downloadStream(url, clientID) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const stream = await Util.fetchSongStreamURL(url, clientID);
+
+                https.get(stream, data => resolve(data));
+
+            } catch(e) {
+                reject(new Error("ERROR_DOWNLOAD_FAILED"));
             }
         });
     }

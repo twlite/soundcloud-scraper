@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-scraper",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL",
   "main": "index.js",
   "repository": {
@@ -40,5 +40,8 @@
     "soundcloud-scraper",
     "soundcloud-song-downloader",
     "soundcloud-api"
-  ]
+  ],
+  "devDependencies": {
+    "discord-ytdl-core": "^4.0.9"
+  }
 }

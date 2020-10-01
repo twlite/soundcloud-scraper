@@ -1,10 +1,9 @@
-const User = require("./src/User");
+const User = require("./src/User.js");
 const Util = require("./src/Util.js");
 const BASE_TRACK_SEARCH = (mode) => `https://soundcloud.com/search${mode}?q=`;
 const BASE_USER_LIKES = async (urn, clientId, limit, offset) => `https://api-v2.soundcloud.com/users/${urn}/track_likes?offset=${offset || ""}&limit=${limit || 200}&client_id=${clientId}&app_version=${await Util.apiVersion()}&app_locale=en`;
 const { Readable } = require("stream");
-
-
+const Store = require("./src/Store.js");
 
 /**
  * Validate url. Returns true if the link given matches with soundcloud url.
@@ -13,13 +12,19 @@ const { Readable } = require("stream");
 module.exports.validateURL = (link) => Util.validateURL(link);
 
 /**
+ * Cache
+ */
+module.exports.getStore = () => Store;
+
+/**
  * Returns soundcloud song info
  * @param {string} link Song url
  * @param {object} options Fetch options
- * @param {boolean} [options.recommended] Set it to true if you want recommended songs
- * @param {boolean} [options.comments] Set it to true if you want comments
+ * @param {boolean} [options.recommended=false] Set it to true if you want recommended songs
+ * @param {boolean} [options.comments=false] Set it to true if you want comments
+ * @param {boolean} [options.fetchStreamURL=false] If it should parse stream url
  */
-module.exports.getSongInfo = async (link, ops = { recommended: false, comments: false }) => {
+module.exports.getSongInfo = async (link, ops = { recommended: false, comments: false, fetchStreamURL: false }) => {
     if (!Util.validateURL(link)) throw new Error("Invalid url");
 
     const sourceHTML = await Util.parseHTML(link);
@@ -62,10 +67,29 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         embed: safeSelector('meta[itemprop="embedUrl"]'),
         comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
         recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : [],
-        trackURL: sourceHTML.split('},{"url":"')[1].split('","')[0]
+        trackURL: sourceHTML.split('},{"url":"')[1].split('","')[0],
+        streamURL: ops.fetchStreamURL ? await this.getStreamURL(sourceHTML.split('},{"url":"')[1].split('","')[0], true) : null
     };
 
     return obj;
+};
+
+/**
+ * Returns stream url
+ * @param {string} songURL Song url
+ * @param {string} [clientID=null] Soundcloud client id
+ * @param {boolean} [parsedURL=false] If it is parsed url
+ * @returns {Promise<string>}
+ */
+module.exports.getStreamURL = async (songURL, clientid=null, parsedURL=false) => {
+    if (!songURL || typeof songURL !== "string") throw new Error("Invalid url");
+
+    if (!parsedURL) {
+        const sourceHTML = await Util.parseHTML(songURL);
+        return await Util.fetchSongStreamURL(sourceHTML.split('},{"url":"')[1].split('","')[0], clientid);
+    } else {
+        return await Util.fetchSongStreamURL(songURL, clientid);
+    }
 };
 
 /**
@@ -197,9 +221,11 @@ module.exports.getRecommendedSongs = async (link) => {
 
 /**
  * Fetches soundcloud api key
+ * @param {boolean} [force=false] if it should forcefully parse key
  * @returns {Promise<string|null>}
  */
-module.exports.fetchSoundcloudKey = async () => {
+module.exports.fetchSoundcloudKey = async (force=false) => {
+    if (!force && Store.has("SOUNDCLOUD_API_KEY")) return Store.get("SOUNDCLOUD_API_KEY");
     return await Util.keygen();
 };
 
