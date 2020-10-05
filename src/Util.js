@@ -184,9 +184,8 @@ class Util {
     static apiVersion() {
         return new Promise(async resolve => {
             try {
-                const html = await Util.parseHTML("https://soundcloud.com");
-                const matches = /__sc_version\s*=\s*"(?<apiVersion>[^"]+)/.exec(html);
-                return resolve(matches.groups.apiVersion);
+                const html = await Util.parseHTML("https://soundcloud.com/version.txt");
+                return resolve(parseInt(html));
             } catch(e) {
                 resolve(null);
             }

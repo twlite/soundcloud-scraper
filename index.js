@@ -231,7 +231,7 @@ module.exports.fetchSoundcloudKey = async (force=false) => {
 
 /**
  * Fetches soundcloud api version
- * @returns {Promise<string|null>}
+ * @returns {Promise<number|null>}
  */
 module.exports.fetchSoundcloudVersion = async () => {
     return await Util.apiVersion();
