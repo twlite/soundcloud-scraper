@@ -46,10 +46,10 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         return res && res.attributes.item(1).value
     }
 
-    const trackUrlBase = sourceHTML.split('},{"url":"')[1];
-    let trackUrl = '';
-    if (trackUrlBase) {
-        trackUrl = trackUrlBase.split('","')[0];
+    const trackURLBase = sourceHTML.split('},{"url":"')[1];
+    let trackURL = '';
+    if (trackURLBase) {
+        trackURL = trackURLBase.split('","')[0];
     }
     
     let obj = {
@@ -73,7 +73,7 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         embed: safeSelector('meta[itemprop="embedUrl"]'),
         comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
         recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : [],
-        trackUrl,
+        trackURL,
         streamURL: ops.fetchStreamURL ? await this.getStreamURL(sourceHTML.split('},{"url":"')[1].split('","')[0], true) : null
     };
 
