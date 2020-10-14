@@ -45,6 +45,12 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         const res = document.querySelectorAll(str)[0]
         return res && res.attributes.item(1).value
     }
+
+    const trackUrlBase = sourceHTML.split('},{"url":"')[1];
+    let trackUrl = '';
+    if (trackUrlBase) {
+        trackUrl = trackURL1.split('","')[0];
+    }
     
     let obj = {
         id: sourceHTML.split('content="soundcloud://sounds:')[1].split('">')[0],
@@ -67,7 +73,7 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
         embed: safeSelector('meta[itemprop="embedUrl"]'),
         comments: ops.comments ? Util.parseComments(document.getElementsByClassName("comments")[0].innerHTML) : [],
         recommendedSongs: ops.recommended ? await this.getRecommendedSongs(link) : [],
-        trackURL: sourceHTML.split('},{"url":"')[1].split('","')[0],
+        trackUrl,
         streamURL: ops.fetchStreamURL ? await this.getStreamURL(sourceHTML.split('},{"url":"')[1].split('","')[0], true) : null
     };
 
