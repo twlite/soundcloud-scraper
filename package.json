@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "jsdom": "^16.4.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "soundcloud-scraper": "mguay22/soundcloud-scraper"
   },
   "bugs": {
     "url": "https://github.com/Androz2091/soundcloud-scraper/issues"

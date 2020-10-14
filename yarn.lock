@@ -537,6 +537,13 @@ saxes@^5.0.0:
   dependencies:
     xmlchars "^2.2.0"
 
+soundcloud-scraper@mguay22/soundcloud-scraper:
+  version "3.0.2"
+  resolved "https://codeload.github.com/mguay22/soundcloud-scraper/tar.gz/b479089f172e109e37c23d8d46e328c611f840d8"
+  dependencies:
+    jsdom "^16.4.0"
+    node-fetch "^2.6.0"
+
 source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"

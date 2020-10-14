@@ -49,7 +49,7 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
     const trackUrlBase = sourceHTML.split('},{"url":"')[1];
     let trackUrl = '';
     if (trackUrlBase) {
-        trackUrl = trackURL1.split('","')[0];
+        trackUrl = trackUrlBase.split('","')[0];
     }
     
     let obj = {
