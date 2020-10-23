@@ -1,13 +1,13 @@
 {
   "name": "soundcloud-scraper",
-  "version": "3.0.4",
-  "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL",
+  "version": "3.0.3",
+  "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Androz2091/soundcloud-scraper.git"
+    "url": "git+https://github.com/DevSnowflake/soundcloud-scraper.git"
   },
-  "author": "Androz2091 <androz2091@gmail.com>",
+  "author": "Snowflake Studio ❄",
   "license": "MIT",
   "types": "./typings/index.d.ts",
   "exports": {
@@ -25,12 +25,9 @@
     "node-fetch": "^2.6.0"
   },
   "bugs": {
-    "url": "https://github.com/Androz2091/soundcloud-scraper/issues"
+    "url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
   },
-  "homepage": "https://github.com/Androz2091/soundcloud-scraper#readme",
-  "directories": {
-    "test": "test"
-  },
+  "homepage": "https://github.com/DevSnowflake/soundcloud-scraper#readme",
   "scripts": {
     "test": "cd test && node index.js"
   },
