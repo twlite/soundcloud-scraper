@@ -38,12 +38,12 @@ module.exports.getSongInfo = async (link, ops = { recommended: false, comments: 
 
     const safeSelector = str => {
         const res = document.querySelector(str)
-        return res && res.attributes.item(1).value
+        return res && res.attributes && res.attributes.item(1) && res.attributes.item(1).value
     }
     
     const safeSelectorAll = str => {
         const res = document.querySelectorAll(str)[0]
-        return res && res.attributes.item(1).value
+        return res && res.attributes && res.attributes.item(1) && res.attributes.item(1).value
     }
 
     const trackURLBase = sourceHTML.split('},{"url":"')[1];
