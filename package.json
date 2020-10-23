@@ -1,0 +1,35 @@
+{
+  "name": "soundcloud-scraper",
+  "version": "4.0.0",
+  "description": "Scrape data from soundcloud easily.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevSnowflake/soundcloud-scraper.git"
+  },
+  "keywords": [
+    "soundcloud",
+    "scraper",
+    "api",
+    "data",
+    "soundcloud-api",
+    "download",
+    "key",
+    "soundcloud-api-key",
+    "soundcloud-downloader",
+    "soundcloud-download"
+  ],
+  "author": "Snowflake Studio ❄",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
+  },
+  "homepage": "https://github.com/DevSnowflake/soundcloud-scraper#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "node-fetch": "^2.6.1"
+  }
+}
