@@ -30,7 +30,7 @@ class SoundCloud {
             if (key && typeof key === "string") this.API_KEY = key;
             else this.API_KEY = null;
         } else {
-            this.API_KEY = null;
+            this.API_KEY = KEY;
         }
     }
 }
