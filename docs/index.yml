@@ -1,4 +1,8 @@
 - name: Examples
   files:
-    - name: Download Audio
+    - name: Download
       path: download.js
+- name: Welcome
+  files:
+    - name: Welcome
+      path: welcome.md
