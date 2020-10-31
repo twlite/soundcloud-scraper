@@ -4,7 +4,7 @@ const Store = require("./store/Store");
 const Embed = require("./structures/Embed");
 const Song = require("./structures/Song");
 
-class SoundCloud {
+class Client {
 
     /**
      * SoundCloud Scraper
@@ -372,4 +372,4 @@ class SoundCloud {
     }
 }
 
-module.exports = SoundCloud;
+module.exports = Client;
