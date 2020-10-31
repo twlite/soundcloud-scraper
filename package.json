@@ -4,6 +4,7 @@
   "description": "Scrape data from soundcloud easily.",
   "main": "index.js",
   "scripts": {
+    "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
     "test": "cd test && node index.js"
   },
   "repository": {
