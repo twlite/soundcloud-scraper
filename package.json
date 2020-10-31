@@ -21,7 +21,8 @@
     "key",
     "soundcloud-api-key",
     "soundcloud-downloader",
-    "soundcloud-download"
+    "soundcloud-download",
+    "music"
   ],
   "author": "Snowflake Studio ❄",
   "license": "MIT",
