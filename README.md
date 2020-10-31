@@ -6,11 +6,158 @@ Scrape data from soundcloud easily.
 # Installation
 
 ```sh
-npm i DevSnowflake/soundcloud-scraper#v4
+$ npm i DevSnowflake/soundcloud-scraper#v4
 ```
 
-# Under Development
-Not recommended for production.
+# Example
+## Downloading a Song
+
+> Note: This process can take few seconds if you do not provide api key
+> because it will first find the api key and then fetch respective track url to get final stream url
+> and then download it. To solve this issue, first get your soundcloud key using `SoundCloud.keygen()` and then save it somewhere.
+> Later you can pass that key in `SoundCloud.Client` constructor: `new SoundCloud.Client("API_KEY")`.
+
+```js
+const SoundCloud = require("soundcloud-scraper");
+const client = new SoundCloud.Client(null); // set it to null if you dont have api key
+
+client.getSongInfo("https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite")
+    .then(async song => {
+        const stream = await song.downloadProgressive();
+        const writer = stream.pipe(fs.createWriteStream(`./${song.title}.mp3`));
+        writer.on("finish", () => console.log("Finished writing song!"));
+    })
+    .catch(console.error);
+```
+
+# API
+## Song Info
+
+<details>
+<summary>👉 Preview Response</summary>
+
+```js
+Song {
+  id: '316547873',
+  title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD]',
+  description: 'FREE DOWNLOAD: http://discoverysounds.com/gate/alan-walker-feat-k-391-ignite\n' +
+    '\n' +
+    'Alan Walker Feat K 391 Ignite Download\n' +
+    'Alan Walker Feat K 391 Ignite Mp3 Download\n' +
+    'Alan Walker Feat K 391 Ignite New Song 2',
+  thumbnail: 'https://i1.sndcdn.com/artworks-000216694368-wsysn4-t500x500.jpg',
+  url: 'https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite',
+  duration: 210000,
+  playCount: '771664',
+  commentsCount: '371',
+  likes: '13514',
+  genre: 'Dance & EDM',
+  author: {
+    name: 'Doge Sounds',
+    username: 'dogesounds',
+    url: 'https://soundcloud.com/dogesounds',
+    avatarURL: 'https://i1.sndcdn.com/avatars-000304905983-a0568r-large.jpg',
+    urn: 298449071,
+    verified: false,
+    followers: 149,
+    following: 32
+  },
+  publishedAt: 2017-04-07T11:02:54.000Z,
+  embedURL: 'https://soundcloud.com/oembed?url=https%3A%2F%2Fsoundcloud.com%2Fdogesounds%2Falan-walker-feat-k-391-ignite&format=json',
+  embed: null,
+  streams: {
+    hls: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/hls',
+    progressive: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/progressive'
+  },
+  trackURL: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/progressive',
+  comments: [],
+  streamURL: null
+}
+```
+</details>
+
+## Song Embed
+
+<details>
+<summary>👉 Preview Response</summary>
+
+```js
+Embed {
+  url: 'https://soundcloud.com/oembed?url=https%3A%2F%2Fsoundcloud.com%2Fdogesounds%2Falan-walker-feat-k-391-ignite&format=json',
+  version: 1,
+  type: 'rich',
+  provider: { name: 'SoundCloud', url: 'https://soundcloud.com' },
+  height: 400,
+  width: '100%',
+  title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD] by Doge Sounds',
+  description: 'FREE DOWNLOAD: http://discoverysounds.com/gate/alan-walker-feat-k-391-ignite\n' +
+    '\n' +
+    'Alan Walker Feat K 391 Ignite Download\n' +
+    'Alan Walker Feat K 391 Ignite Mp3 Download\n' +
+    'Alan Walker Feat K 391 Ignite New Song 2017\n' +
+    'Alan Walker Feat K 391 Ignite 2017',
+  author: { name: 'Doge Sounds', url: 'https://soundcloud.com/dogesounds' },
+  thumbnailURL: 'https://i1.sndcdn.com/artworks-000216694368-wsysn4-t500x500.jpg'
+}
+```
+</details>
+
+## Song Comments
+
+<details>
+<summary>👉 Preview Response</summary>
+
+```js
+[
+  {
+    text: '����',
+    createdAt: 2020-10-30T11:58:13.000Z,
+    author: {
+      name: 'askaria22',
+      username: 'mohamed-askaria-541170196',
+      url: 'https://soundcloud.com/mohamed-askaria-541170196'
+    }
+  },
+  {
+    text: 'Cool',
+    createdAt: 2020-10-28T15:03:21.000Z,
+    author: {
+      name: 'Matias Ronkainen',
+      username: 'matias-ronkainen',
+      url: 'https://soundcloud.com/matias-ronkainen'
+    }
+  },
+  {
+    text: 'wow nice song i love the beat',
+    createdAt: 2020-10-27T05:35:39.000Z,
+    author: {
+      name: 'saathvika vempati',
+      username: 'saathvika-vempati',
+      url: 'https://soundcloud.com/saathvika-vempati'
+    }
+  },
+  {
+    text: 'tempik',
+    createdAt: 2020-10-23T04:49:11.000Z,
+    author: {
+      name: 'didik8336@gmail.com',
+      username: 'didik-saputra-908291434',
+      url: 'https://soundcloud.com/didik-saputra-908291434'
+    }
+  },
+  {
+    text: '@jazmine-powers-328939011: ew chain mail',
+    createdAt: 2020-10-21T18:40:33.000Z,
+    author: {
+      name: 'FallenQbjYT',
+      username: 'fallen-qbj',
+      url: 'https://soundcloud.com/fallen-qbj'
+    }
+  },
+  ...
+]
+```
+</details>
 
 # Join Our Discord Server
 [![](https://i.imgur.com/f6hNUfc.png)](https://discord.gg/2SUybzb)
