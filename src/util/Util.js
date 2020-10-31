@@ -70,7 +70,7 @@ class Util {
 
     /**
      * Parse duration and convert it to ms.
-     * @param {string} duration 
+     * @param {string} duration Raw duration to parse
      * @returns {number}
      */
     static parseDuration(duration) {

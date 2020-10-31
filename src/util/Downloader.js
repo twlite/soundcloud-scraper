@@ -4,6 +4,7 @@ class Downloader {
 
     /**
      * SoundCloud stream downloader
+     * @hideconstructor
      */
     constructor() {
         throw new Error(`The ${this.constructor.name} class may not be instantiated!`);

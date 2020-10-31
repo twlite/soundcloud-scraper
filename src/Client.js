@@ -7,10 +7,15 @@ const Song = require("./structures/Song");
 class Client {
 
     /**
+     * SoundCloud client options
+     * @typedef {object} ClientOptions
+     * @property {boolean} [fetchAPIKey=true] If it should fetch api key on startup
+     */
+
+    /**
      * SoundCloud Scraper
      * @param {?string} [API_KEY=null] Existing API key (if any). Else SoundCloud scraper will try to fetch one for you :)
-     * @param {object} [ClientOptions] SoundCloud client options
-     * @param {boolean} [ClientOptions.fetchAPIKey=true] If it should fetch and store soundcloud api key on startup
+     * @param {ClientOptions} [ClientOptions] SoundCloud client options
      */
     constructor(API_KEY = null, ClientOptions = { fetchAPIKey: true }) {
 
@@ -132,7 +137,7 @@ class Client {
 
     /**
      * Search for `track`/`artist`/`playlist`/`all`.
-     * @param {string} query 
+     * @param {string} query Search query
      * @param {"all"|"artist"|"playlist"|"track"} [type] Search type
      * @returns {Promise<SearchResult[]>}
      */
