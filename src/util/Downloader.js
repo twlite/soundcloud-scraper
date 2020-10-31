@@ -24,16 +24,6 @@ class Downloader {
     }
 
     /**
-     * Incoming Stream
-     * @typedef {import("http").IncomingMessage} IncomingMessage
-     */
-
-    /**
-     * HTTP Request Options
-     * @typedef {import("http").RequestOptions | import("https").RequestOptions} RequestOptions
-     */
-
-    /**
      * Downloads progressive stream
      * @param {string} url Stream url to download
      * @param {RequestOptions} options Request options

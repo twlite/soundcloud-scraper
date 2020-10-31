@@ -4,28 +4,25 @@ const Store = require("./store/Store");
 const Embed = require("./structures/Embed");
 const Song = require("./structures/Song");
 
-/**
- * SoundCloud Scraper
- * @author Snowflake Studio ❄
- * @license MIT
- */
 class SoundCloud {
 
     /**
      * SoundCloud Scraper
-     * @param {?string} API_KEY Existing API key (if any). Else SoundCloud scraper will try to fetch one for you :)
-     * @param {object} ClientOptions SoundCloud client options
+     * @param {?string} [API_KEY=null] Existing API key (if any). Else SoundCloud scraper will try to fetch one for you :)
+     * @param {object} [ClientOptions] SoundCloud client options
      * @param {boolean} [ClientOptions.fetchAPIKey=true] If it should fetch and store soundcloud api key on startup
      */
     constructor(API_KEY = null, ClientOptions = { fetchAPIKey: true }) {
 
         /**
          * Default api key
+         * @type {string}
          */
         this.API_KEY = null;
 
         /**
          * Client options
+         * @type {object}
          */
         this.options = ClientOptions;
 
@@ -137,7 +134,7 @@ class SoundCloud {
      * Search for `track`/`artist`/`playlist`/`all`.
      * @param {string} query 
      * @param {"all"|"artist"|"playlist"|"track"} [type] Search type
-     * @returns {Promise<SearchResult[]}
+     * @returns {Promise<SearchResult[]>}
      */
     search(query, type = "all") {
         return new Promise(async (resolve, reject) => {

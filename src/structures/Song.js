@@ -133,6 +133,7 @@ class Song {
     /**
      * Returns song age in ms
      * @readonly
+     * @type {number}
      */
     get age() {
         const old = this.publishedTimestamp;
@@ -144,19 +145,12 @@ class Song {
     /**
      * Returns song published timestamp
      * @readonly
+     * @type {number}
      */
     get publishedTimestamp() {
         if (!this.publishedAt || !(this.publishedAt instanceof Date)) return 0;
         return this.publishedAt.getTime();
     }
-
-    /**
-     * @typedef {import("m3u8stream").Options} Options
-     */
-
-    /**
-     * @typedef {import("m3u8stream").Stream} Stream
-     */
 
     /**
      * Downloads HLS stream
@@ -170,16 +164,6 @@ class Song {
 
         return await Downloader.downloadHLS(streamURL, options);
     }
-
-    /**
-     * Incoming Stream
-     * @typedef {import("http").IncomingMessage} IncomingMessage
-     */
-
-    /**
-     * HTTP Request Options
-     * @typedef {import("http").RequestOptions | import("https").RequestOptions} RequestOptions
-     */
 
     /**
      * Downloads progressive stream

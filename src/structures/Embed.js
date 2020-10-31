@@ -43,6 +43,7 @@ class Embed {
 
     /**
      * Embed visualizer url
+     * @type {string}
      */
     get visualizer() {
         const $ = Util.loadHTML(this.toHTML());
@@ -61,6 +62,7 @@ class Embed {
 
     /**
      * Returns JSON version of the data
+     * @returns {object}
      */
     toJSON() {
         return this._raw || {};
@@ -68,6 +70,7 @@ class Embed {
 
     /**
      * String representation of this embed
+     * @returns {string}
      */
     toString() {
         return this.url || "";
