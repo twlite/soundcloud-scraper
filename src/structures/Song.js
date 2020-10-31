@@ -177,7 +177,7 @@ class Song {
     /**
      * Downloads HLS stream
      * @param {Options} options m3u8 download options
-     * @returns {Promise<Stream>}
+     * @returns {Promise<m3u8Stream>}
      */
     async downloadHLS(options = {}) {
         const url = await Util.fetchSongStreamURL(this.streams.hls, Store.get("SOUNDCLOUD_API_KEY"));
