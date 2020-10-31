@@ -32,5 +32,8 @@
     "cheerio": "^1.0.0-rc.3",
     "m3u8stream": "^0.8.0",
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "discord.js-docgen": "github:discordjs/docgen"
   }
 }
