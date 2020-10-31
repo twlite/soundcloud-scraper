@@ -124,6 +124,202 @@ class SoundCloud {
     }
 
     /**
+     * @typedef {object} SearchResult
+     * @property {number} index Index number
+     * @property {?string} artist Artist name (if any)
+     * @property {string} url Item url
+     * @property {string} itemName Item name
+     * @property {string} name Artist name/Title of the result
+     * @property {"track"|"artist"|"playlist"|"unknown"} type Result type
+     */
+
+    /**
+     * Search for `track`/`artist`/`playlist`/`all`.
+     * @param {string} query 
+     * @param {"all"|"artist"|"playlist"|"track"} [type] Search type
+     * @returns {Promise<SearchResult[]}
+     */
+    search(query, type = "all") {
+        return new Promise(async (resolve, reject) => {
+            if (!query || typeof query !== "string") return reject(new Error(`Expected search query to be a string, received "${typeof query}"!`));
+            const validType = ["all", "artist", "playlist", "track"];
+            if (!validType.includes(type)) throw new Error(`Search type expected to be one of ${validType.map(m => `"${m}"`).join(", ")} but received "${type}"!`);
+
+            let searchPath;
+
+            switch(type) {
+                case "artist":
+                    searchPath = "/search/people?q=";
+                    break;
+                case "playlist":
+                    searchPath = "/search/sets?q=";
+                    break;
+                case "track":
+                    searchPath = "/search/sounds?q=";
+                    break;
+                default:
+                    searchPath = "/search?q=";
+            }
+
+            const raw = await Util.parseHTML(`${Constants.SOUNDCLOUD_BASE_URL}${searchPath}${encodeURIComponent(query)}`);
+            const html = raw.split("<noscript><ul>")[1].split("</ul>")[1].split("</noscript>")[0];            
+            const $ = Util.loadHTML(html);
+            const arr = [];
+            if ($("li").length < 1) return resolve(arr);
+
+            $("li").each((i) => {
+                const ref = $("a").eq(i).attr("href");
+                const c = ref.split("/").filter(x => !!x);
+                let t;
+
+                switch(c.length) {
+                    case 2:
+                        t = "track";
+                        break;
+                    case 1:
+                        t = "artist";
+                        break;
+                    case 3:
+                        if (c.includes("sets")) t = "playlist";
+                        else t = "unknown";
+                        break;
+                    default:
+                        t = "unknown";
+                }
+
+                arr.push({
+                    index: i,
+                    artist: c[0] || null,
+                    url: `${Constants.SOUNDCLOUD_BASE_URL}${ref}`,
+                    itemName: c.length === 1 ? null : c.pop(),
+                    name: $("a").eq(i).text(),
+                    type: t
+                });
+            });
+
+            return resolve(arr);
+        });
+    }
+
+    /**
+     * @typedef {object} UserTracks
+     * @property {string} title Track title
+     * @property {string} url Track url
+     * @property {Date} publishedAt Track published timestamp
+     * @property {string} genre Track genre
+     * @property {string} author Track author
+     * @property {number} duration Track duration
+     */
+
+    /**
+     * @typedef {object} UserLikes
+     * @property {string} title Track title
+     * @property {string} url Track url
+     * @property {Date} publishedAt Track published timestamp
+     * @property {object} author Track author
+     * @property {string} [author.name] Author name
+     * @property {string} [author.username] Author username
+     * @property {string} [author.profile] Author profile
+     */
+
+    /**
+     * @typedef {object} UserInfo
+     * @property {number} urn User URN
+     * @property {string} username Username
+     * @property {string} name Name
+     * @property {boolean} verified User verification status
+     * @property {Date} createdAt Timestamp when the user was created
+     * @property {?string} avatarURL Avatar of the user
+     * @property {string} profile Profile of the user
+     * @property {?string} bannerURL User profile banner url
+     * @property {number} followers Number of followers
+     * @property {number} following Number of followings
+     * @property {number} likesCount Number of likes
+     * @property {number} tracksCount Number of tracks uploaded
+     * @property {UserTracks[]} tracks Tracks uploaded by the user
+     * @property {UserLikes[]} likes Tracks liked by the user
+     */
+
+    /**
+     * Returns SoundCloud user info
+     * @param {string} username SoundCloud username or profile url
+     * @returns {Promise<UserInfo>}
+     */
+    getUser(username) {
+        return new Promise(async (resolve, reject) => {
+            if (!username || typeof username !== "string") reject(new Error(`Expected username to be a string, received "${typeof username}"!`));
+            const BASE_URL = Constants.SOUNDCLOUD_BASE_URL;
+            if (!username.includes(BASE_URL)) username = `${BASE_URL}/${username}`;
+
+            const html = await Util.parseHTML(username);
+            const URNSearch = /soundcloud:\/\/users:(?<urn>\d+)/.exec(html);
+            if (!URNSearch || !URNSearch.groups.urn) return reject(new Error("User not found!"));
+            const tracksSection = html.split("<section>")[1].split("</section>")[0];
+
+            const $ = Util.loadHTML(tracksSection);
+            let banner = null;
+            if (html.includes(',"visual_url":"')) banner = html.split(',"visual_url":"')[1].split('"')[0];
+            const name = html.split(`:${URNSearch.groups.urn}","username":"`)[1].split('"')[0];
+            const profile = Util.last(html.split('"permalink_url":"')).split('"')[0];
+
+            const likesSource = await Util.parseHTML(`${username}/likes`);
+            const lhtml = likesSource.split("<section>")[1].split("</section>")[0];
+            const $$ = Util.loadHTML(lhtml);
+            let likes = [];
+            let songs = [];
+
+            $("article").each(i => {
+                const url = $('a[itemprop="url"]').eq(i);
+
+                songs.push({
+                    title: url.text(),
+                    url: `${Constants.SOUNDCLOUD_BASE_URL}${url.attr("href")}`,
+                    publishedAt: new Date($("time").eq(i).text()),
+                    genre: $('meta[itemprop="genre"]').eq(i).attr("content"),
+                    author: profile.split("/").pop(),
+                    duration: Util.parseDuration($('meta[itemprop="duration"]').eq(i).attr("content"))
+                });
+            });
+
+            $$("article").each(i => {
+                const url = $('a[itemprop="url"]').eq(i);
+                const LastA = $('a').eq(1);
+
+                likes.push({
+                    title: url.text(),
+                    url: `${Constants.SOUNDCLOUD_BASE_URL}${url.attr("href")}`,
+                    publishedAt: new Date($("time").eq(i).text()),
+                    genre: $('meta[itemprop="genre"]').eq(i).attr("content"),
+                    author: {
+                        name: LastA.text(),
+                        username: LastA.attr("href").replace("/", ""),
+                        profile: `${Constants.SOUNDCLOUD_BASE_URL}${LastA.attr("href")}`
+                    },
+                });
+            });
+
+            const obj = {
+                urn: parseInt(URNSearch.groups.urn),
+                username: profile.split("/").pop(),
+                name: name,
+                verified: !html.includes(`,"username":"${name}","verified":false`),
+                createdAt: new Date(Util.last(html.split('"created_at":"')).split('","')[0]),
+                avatarURL: Util.last(html.split('"avatar_url":"')) ? Util.last(html.split('"avatar_url":"')).split('"')[0] : null,
+                profile: profile,
+                bannerURL: banner,
+                followers: parseInt(Util.last(html.split('"followers_count":')).split(',')[0]) || 0,
+                following: parseInt(Util.last(html.split('"followings_count":')).split(',')[0]) || 0,
+                likesCount: parseInt(Util.last(html.split('"likes_count":')).split(',')[0]) || 0,
+                tracksCount: parseInt(Util.last(html.split('"track_count":')).split(',')[0]) || 0,
+                tracks: songs,
+                likes: likes
+            };
+
+            resolve(obj);
+        });
+    }
+
+    /**
      * Returns SoundCloud song embed
      * @param {string} embedURL SoundCloud song embed url
      * @returns {Promise<Embed>}

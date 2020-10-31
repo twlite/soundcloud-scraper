@@ -13,6 +13,15 @@ class Util {
     }
 
     /**
+     * Returns last item from array
+     * @param {any[]} arr Array
+     */
+    static last(arr = []) {
+        if (!arr.length) return null;
+        return arr[arr.length - 1];
+    }
+
+    /**
      * Validates soundcloud url
      * @param {string} url URL to validate
      * @returns {boolean}
