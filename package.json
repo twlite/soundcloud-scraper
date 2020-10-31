@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
+    "docs:test": "docgen --source src --custom docs/index.yml",
     "test": "cd test && node index.js"
   },
   "repository": {
@@ -29,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
   },
-  "homepage": "https://github.com/DevSnowflake/soundcloud-scraper#readme",
+  "homepage": "https://soundcloud-scraper.netlify.app",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "m3u8stream": "^0.8.0",

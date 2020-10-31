@@ -23,56 +23,67 @@ class Song {
         if (!data) return;
 
         /**
+         * Song id
          * @type {string}
          */
         this.id = data.id || null;
 
         /**
+         * Song title
          * @type {string}
          */
         this.title = data.title || null;
 
         /**
+         * Song description
          * @type {string}
          */
         this.description = data.description || null;
 
         /**
+         * Song thumbnail
          * @type {string}
          */
         this.thumbnail = data.thumbnail || null;
 
         /**
+         * Song url
          * @type {string}
          */
         this.url = data.url || null;
 
         /**
+         * Song duration
          * @type {number}
          */
         this.duration = data.duration || 0;
 
         /**
+         * Number of times this song was played
          * @type {number}
          */
         this.playCount = data.playCount || 0;
 
         /**
+         * Total comments on this song
          * @type {number}
          */
         this.commentsCount = data.commentsCount || 0;
 
         /**
+         * Total likes on this song
          * @type {number}
          */
         this.likes = data.likes || 0;
 
         /**
+         * Song Genre
          * @type {string}
          */
         this.genre = data.genre || null;
 
         /**
+         * Song Author
          * @type {SongAuthor}
          */
         this.author = {
@@ -87,24 +98,32 @@ class Song {
         };
 
         /**
+         * Timestamp when this song was published
          * @type {Date}
          */
         this.publishedAt = data.publishedAt || null;
 
         /**
+         * Embed url of this song
          * @type {string}
          */
         this.embedURL = data.embedURL || null;
 
         /**
+         * Embed object of this song
          * @type {Embed}
          */
         this.embed = data.embed || null;
 
         /**
-         * @type {object}
+         * @typedef {object} SongStreams
          * @property {string} hls HLS stream url
          * @property {string} progressive Progressive stream url
+         */
+
+        /**
+         * Streams of this song
+         * @type {SongStreams}
          */
         this.streams = {
             hls: data.track.hls || null,
@@ -112,16 +131,19 @@ class Song {
         };
 
         /**
+         * Progressive track url
          * @type {string}
          */
         this.trackURL = data.trackURL || null;
 
         /**
+         * Comments on this song
          * @type {Comment[]}
          */
         this.comments = data.comments || [];
 
         /**
+         * Downloadable stream url
          * @type {string}
          */
         this.streamURL = data.streamURL || null;

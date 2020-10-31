@@ -59,6 +59,7 @@ class Util {
     /**
      * Loads html
      * @param {?string} html HTML to load
+     * @returns {CheerioRoot}
      */
     static loadHTML(html = null) {
         if (!html) throw new Error("No data to load");
@@ -81,8 +82,20 @@ class Util {
     }
 
     /**
+     * The comment object
+     * @typedef {object} Comment
+     * @property {string} text Comment content
+     * @property {Date} createdAt Timestamp when comment was created
+     * @property {object} author Comment author
+     * @property {string} [author.name] Author name
+     * @property {string} [author.username] Author username
+     * @property {string} [author.url] Author url
+     */
+
+    /**
      * Parse comments
      * @param {string} commentSection Comment section to parse
+     * @returns {Comment[]}
      */
     static parseComments(commentSection) {
         if (!commentSection) return null;
