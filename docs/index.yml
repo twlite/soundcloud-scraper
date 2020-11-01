@@ -16,3 +16,5 @@
       path: embed.md
     - name: Comments
       path: comments.md
+    - name: Playlist
+      path: playlist.md
