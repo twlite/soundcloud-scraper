@@ -81,7 +81,7 @@ class Client {
             const trackURLBase = raw.split('},{"url":"')[1];
             let trackURL = null;
             if (trackURLBase) trackURL = trackURLBase.split('","')[0];
-            const commentSection = raw.split("<section class=\"comments\">") && raw.split("<section class=\"comments\">")[1].split("</section>")[0]
+            const commentSection = raw.split("<section class=\"comments\">") && raw.split("<section class=\"comments\">")[1] ? raw.split("<section class=\"comments\">")[1].split("</section>")[0] : null
             // </temporary>
 
             const obj = {
@@ -113,7 +113,7 @@ class Client {
                     progressive: trackURL
                 },
                 trackURL: trackURL,
-                comments: !!options.fetchComments ? Util.parseComments(commentSection) : []
+                comments: !!options.fetchComments && !!commentSection ? Util.parseComments(commentSection) : []
             };
 
             if (!!options.fetchStreamURL) {
