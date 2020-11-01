@@ -126,6 +126,77 @@ class Client {
     }
 
     /**
+     * The playlist object
+     * @typedef {object} Playlist
+     * @property {number} id Playlist id
+     * @property {string} title Playlist title
+     * @property {string} url Playlist url
+     * @property {string} description Playlist description
+     * @property {string} thumbnail Playlist thumbnail
+     * @property {object} author Playlist author
+     * @property {string} author.name Author name
+     * @property {string} author.username Author username
+     * @property {number} author.urn Author urn
+     * @property {string} author.profile Author profile url
+     * @property {string} embedURL Embed url
+     * @property {?Embed} embed Embed
+     * @property {string} genre Playlist genre
+     * @property {number} trackCount Total tracks available
+     * @property {any[]} tracks Tracks object
+     */
+
+    /**
+     * @typedef {object} PlaylistParseOptions
+     * @property {boolean} [fetchEmbed=false] If it should fetch embed
+     */
+
+    /**
+     * Returns playlist info
+     * @param {string} url Playlist url to parse
+     * @param {PlaylistParseOptions} options Playlist parser options
+     * @returns {Promise<Playlist>}
+     */
+    getPlaylist(url, options = { fetchEmbed: false }) {
+        return new Promise(async (resolve, reject) => {
+            if (!url || typeof url !== "string") return reject(new Error(`URL must be a string, received "${typeof url}"!`));
+            if (!Util.validateURL(url)) return reject(new TypeError("Invalid url!"));
+
+            const raw = await Util.parseHTML(url);
+            if (!raw) return reject(new Error("Couldn't parse html!"));
+            const $ = Util.loadHTML(raw);
+            let section;
+
+            try {
+                let data = Util.last(raw.split(',"tracks":')).split(',"track_count"')[0];
+                section = JSON.parse(data);
+            } catch(e) {
+                reject(new Error("Couldn't parse playlist data!"));
+            }
+
+            const info = {
+                id: parseInt($("meta[property=\"al:ios:url\"]").attr("content").split(":").pop()),
+                title: $('meta[property="og:title"]').attr("content"),
+                url: $('meta[property="og:url"]').attr("content"),
+                description: $('meta[property="og:description"]').attr("content"),
+                thumbnail: $('meta[property="og:image"]').attr("content"),
+                author: {
+                    profile: $('meta[property="soundcloud:user"]').attr("content"),
+                    username: $('meta[property="soundcloud:user"]').attr("content").split("/").pop(),
+                    name: raw.split(',"username":"')[1] && raw.split(',"username":"')[1].split('",')[0] || null,
+                    urn: parseInt(raw.split('soundcloud:users:')[1] && raw.split('soundcloud:users:')[1].split('",')[0])
+                },
+                embedURL: $('link[type="text/json+oembed"]').attr("href"),
+                embed: options && !!options.fetchEmbed ? await this.getEmbed($('link[type="text/json+oembed"]').attr("href")) : null,
+                genre: `${raw.split(',"genre":"')[1].split('"')[0]}`.replace(/\\u0026/g, "&"),
+                trackCount: parseInt(Util.last(raw.split(',"track_count":')).split(",")[0]),
+                tracks: section
+            };
+
+            resolve(info);
+        });
+    }
+
+    /**
      * @typedef {object} SearchResult
      * @property {number} index Index number
      * @property {?string} artist Artist name (if any)

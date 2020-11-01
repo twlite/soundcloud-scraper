@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
   },
-  "homepage": "https://soundcloud-scraper.netlify.app",
+  "homepage": "https://soundcloud-scraper.js.org",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "m3u8stream": "^0.8.0",

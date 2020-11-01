@@ -6,8 +6,11 @@ Scrape data from soundcloud easily.
 # Installation
 
 ```sh
-$ npm i DevSnowflake/soundcloud-scraper#rewrite
+$ npm i soundcloud-scraper
 ```
+
+# Documentation
+**[https://soundcloud-scraper.js.org](https://soundcloud-scraper.js.org)**
 
 # Example
 ## Downloading a Song
