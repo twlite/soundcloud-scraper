@@ -153,7 +153,7 @@ class Util {
 
                 resolve(res.url);
 
-            } catch(e) {
+            } catch (e) {
                 reject(new Error("Stream parse failed!"));
             }
         });
@@ -198,7 +198,7 @@ class Util {
                     }
                 };
 
-            } catch(e) {
+            } catch (e) {
                 console.error(e)
                 resolve(null);
             }

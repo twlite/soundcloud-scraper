@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "description": "Scrape data from soundcloud easily.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
     "docs:test": "docgen --source src --custom docs/index.yml",
