@@ -8,18 +8,6 @@ declare module "soundcloud-scraper" {
         [s: string]: any;
     }
 
-    export type Store = Map<any, any>;
-    export interface SoundCloud {
-        Client: Client;
-        Constants: SimpleJSON;
-        keygen: keygen;
-        Store: Store;
-        StreamDownloader: StreamDownloader;
-        Util: Util;
-        validateURL: validateURL;
-        version: string;
-    }
-
     export interface ClientOptions {
         fetchAPIKey?: boolean;
     }
@@ -232,5 +220,15 @@ declare module "soundcloud-scraper" {
         likes: UserLikes[];
     }
 
+    interface SoundCloud {
+        Client: Client;
+        Constants: SimpleJSON;
+        keygen: keygen;
+        Store: Map<any, any>;
+        StreamDownloader: StreamDownloader;
+        Util: Util;
+        validateURL: validateURL;
+        version: string;
+    }
     export = SoundCloud;
 }
