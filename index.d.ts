@@ -1,9 +1,9 @@
-import m3u8stream from "m3u8stream";
-import { RequestOptions, IncomingMessage } from "http";
-import { RequestInfo, RequestInit, Response } from "node-fetch";
-import { load as CherrioLoad } from "cheerio";
-
 declare module "soundcloud-scraper" {
+    import m3u8stream from "m3u8stream";
+    import { RequestOptions, IncomingMessage } from "http";
+    import { RequestInfo, RequestInit, Response } from "node-fetch";
+    import { load as CherrioLoad } from "cheerio";
+
     export interface SimpleJSON {
         [s: string]: any;
     }
@@ -17,35 +17,63 @@ declare module "soundcloud-scraper" {
         API_KEY: string;
         options: ClientOptions;
         apiVersion(force?: boolean): Promise<string | null>;
-        getSongInfo(url: string, options?: {
-            fetchEmbed: boolean;
-            fetchComments: boolean;
-            fetchStreamURL: boolean;
-        }): Promise<Song>;
-        getPlaylist(url: string, options?: PlaylistParseOptions): Promise<Playlist>;
-        search(query: string, type?: "all" | "artist" | "playlist" | "track"): Promise<SearchResult[]>;
+        getSongInfo(
+            url: string,
+            options?: {
+                fetchEmbed: boolean;
+                fetchComments: boolean;
+                fetchStreamURL: boolean;
+            }
+        ): Promise<Song>;
+        getPlaylist(
+            url: string,
+            options?: PlaylistParseOptions
+        ): Promise<Playlist>;
+        search(
+            query: string,
+            type?: "all" | "artist" | "playlist" | "track"
+        ): Promise<SearchResult[]>;
         getUser(username: string): Promise<UserInfo>;
         getEmbed(embedURL: string): Promise<Embed>;
         createAPIKey(KEY?: string | null, fetch?: boolean): Promise<void>;
         fetchStreamURL(trackURL: string): Promise<string | null>;
     }
 
-    export type validateURL = (url?: string) => boolean;
-    export type keygen = (force?: boolean) => Promise<string | null>;
+    export const Constants: SimpleJSON;
+    export const Store: Map<any, any>;
+    export const version: string;
+
+    export function validateURL(url?: string): boolean;
+    export function keygen(force?: boolean): Promise<string | null>;
     export class Util {
         static last(arr?: any[]): any;
         static validateURL: validateURL;
-        static request(url?: RequestInfo, options?: RequestInit): Promise<Response>;
-        static parseHTML(url?: RequestInfo, options?: RequestInit): Promise<string>;
+        static request(
+            url?: RequestInfo,
+            options?: RequestInit
+        ): Promise<Response>;
+        static parseHTML(
+            url?: RequestInfo,
+            options?: RequestInit
+        ): Promise<string>;
         static loadHTML(html?: string | null): ReturnType<typeof CherrioLoad>;
         static parseDuration(duration: string): number;
         static parseComments(commentSection: string): Comment[];
-        static fetchSongStreamURL(songURL: string, clientID: string | null): Promise<string>;
+        static fetchSongStreamURL(
+            songURL: string,
+            clientID: string | null
+        ): Promise<string>;
         static keygen: keygen;
     }
 
-    export type downloadHLS = (options?: m3u8stream.Options) => Promise<m3u8stream.Stream>;
-    export type downloadProgressive = (options?: RequestOptions) => Promise<IncomingMessage>; 
+    export function downloadHLS(
+        url: string,
+        options?: m3u8stream.Options
+    ): Promise<m3u8stream.Stream>;
+    export function downloadProgressive(
+        url: string,
+        options?: RequestOptions
+    ): Promise<IncomingMessage>;
     export class StreamDownloader {
         static downloadHLS: downloadHLS;
         static downloadProgressive: downloadProgressive;
@@ -219,16 +247,4 @@ declare module "soundcloud-scraper" {
         tracks: UserTracks[];
         likes: UserLikes[];
     }
-
-    interface SoundCloud {
-        Client: Client;
-        Constants: SimpleJSON;
-        keygen: keygen;
-        Store: Map<any, any>;
-        StreamDownloader: StreamDownloader;
-        Util: Util;
-        validateURL: validateURL;
-        version: string;
-    }
-    export = SoundCloud;
 }
