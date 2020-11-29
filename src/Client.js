@@ -209,7 +209,7 @@ class Client {
     /**
      * Search for `track`/`artist`/`playlist`/`all`.
      * @param {string} query Search query
-     * @param {"all"|"artist"|"playlist"|"track"} [type] Search type
+     * @param {"all"|"artist"|"playlist"|"track"} [type="all"] Search type
      * @returns {Promise<SearchResult[]>}
      */
     search(query, type = "all") {
