@@ -70,7 +70,7 @@ class Client {
     getSongInfo(url, options = { fetchEmbed: false, fetchComments: false, fetchStreamURL: false }) {
         return new Promise(async (resolve, reject) => {
             if (typeof url !== "string") return reject(new TypeError(`URL type must be a string, received "${typeof url}"!`));
-            if (!Util.validateURL(url)) return reject(new TypeError("Invalid song url!"));
+            if (!Util.validateURL(url, "track")) return reject(new TypeError("Invalid song url!"));
             const raw = await Util.parseHTML(url);
             if (!raw) return reject(new Error("Couldn't parse html!"));
             const $ = Util.loadHTML(raw);
@@ -160,7 +160,7 @@ class Client {
     getPlaylist(url, options = { fetchEmbed: false, removeUnknown: false }) {
         return new Promise(async (resolve, reject) => {
             if (!url || typeof url !== "string") return reject(new Error(`URL must be a string, received "${typeof url}"!`));
-            if (!Util.validateURL(url)) return reject(new TypeError("Invalid url!"));
+            if (!Util.validateURL(url, "playlist")) return reject(new TypeError("Invalid url!"));
 
             const raw = await Util.parseHTML(url);
             if (!raw) return reject(new Error("Couldn't parse html!"));
@@ -326,7 +326,8 @@ class Client {
             if (!username || typeof username !== "string") reject(new Error(`Expected username to be a string, received "${typeof username}"!`));
             const BASE_URL = Constants.SOUNDCLOUD_BASE_URL;
             if (!username.includes(BASE_URL)) username = `${BASE_URL}/${username}`;
-
+            if (!Util.validateURL(username, "artist")) reject(new Error("Invalid artist url"));
+            
             const html = await Util.parseHTML(username);
             const URNSearch = /soundcloud:\/\/users:(?<urn>\d+)/.exec(html);
             if (!URNSearch || !URNSearch.groups.urn) return reject(new Error("User not found!"));
