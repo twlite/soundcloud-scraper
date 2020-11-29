@@ -148,6 +148,7 @@ class Client {
     /**
      * @typedef {object} PlaylistParseOptions
      * @property {boolean} [fetchEmbed=false] If it should fetch embed
+     * @property {boolean} [removeUnknown=false] If it should remove unknown items from the playlist
      */
 
     /**
@@ -156,7 +157,7 @@ class Client {
      * @param {PlaylistParseOptions} options Playlist parser options
      * @returns {Promise<Playlist>}
      */
-    getPlaylist(url, options = { fetchEmbed: false }) {
+    getPlaylist(url, options = { fetchEmbed: false, removeUnknown: false }) {
         return new Promise(async (resolve, reject) => {
             if (!url || typeof url !== "string") return reject(new Error(`URL must be a string, received "${typeof url}"!`));
             if (!Util.validateURL(url)) return reject(new TypeError("Invalid url!"));
@@ -172,6 +173,8 @@ class Client {
             } catch(e) {
                 reject(new Error("Couldn't parse playlist data!"));
             }
+
+            const cleanFeed = !!options.removeUnknown ? section.filter(data => !!data.permalink_url && !!data.title) : section;
 
             const info = {
                 id: parseInt($("meta[property=\"al:ios:url\"]").attr("content").split(":").pop()),
@@ -189,7 +192,7 @@ class Client {
                 embed: options && !!options.fetchEmbed ? await this.getEmbed($('link[type="text/json+oembed"]').attr("href")) : null,
                 genre: `${raw.split(',"genre":"')[1].split('"')[0]}`.replace(/\\u0026/g, "&"),
                 trackCount: parseInt(Util.last(raw.split(',"track_count":')).split(",")[0]),
-                tracks: section
+                tracks: cleanFeed
             };
 
             resolve(info);
