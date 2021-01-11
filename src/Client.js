@@ -23,7 +23,10 @@ class Client {
          * Default api key
          * @type {string}
          */
-        this.API_KEY = null;
+        Object.defineProperty(this, "API_KEY", {
+            value: null,
+            writable: true
+        });
 
         /**
          * Client options
@@ -423,11 +426,12 @@ class Client {
      * @returns {Promise<void>}
      */
     async createAPIKey(KEY = null, fetch = true) {
+        if (KEY !== false && !KEY && "SOUNDCLOUD_API_KEY" in process.env) KEY = process.env["SOUNDCLOUD_API_KEY"];
         if (!KEY && !!fetch) {
             const key = await Util.keygen();
             if (key && typeof key === "string") this.API_KEY = key;
             else this.API_KEY = null;
-        } else if (KEY){
+        } else if (KEY) {
             this.API_KEY = KEY;
             Store.set("SOUNDCLOUD_API_KEY", this.API_KEY);
         } else {
