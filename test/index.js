@@ -38,5 +38,12 @@ const fs = require("fs");
 
 // client.getUser("dogesounds").then(x => console.log(x));
 
-// client.getPlaylist("https://soundcloud.com/maddieparrot/sets/work-out-or-get-out")
-//     .then(x => fs.writeFileSync("./data.json", JSON.stringify(x, null, "\t")))
+client.getPlaylist("https://soundcloud.com/ambreen-kanwal-397095258/sets/albert-vishi")
+.then(async playlist => {
+    console.log(playlist)
+    // const song = playlist.tracks[0];
+    // const stream = await song.downloadProgressive();
+    // const writer = stream.pipe(fs.createWriteStream(`./${song.title}.mp3`));
+    // writer.on("finish", () => console.log("Finished writing song!"));
+})
+    // .then(x => fs.writeFileSync("./data.json", JSON.stringify(x, null, "\t")))

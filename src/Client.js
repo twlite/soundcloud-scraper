@@ -145,13 +145,12 @@ class Client {
      * @property {?Embed} embed Embed
      * @property {string} genre Playlist genre
      * @property {number} trackCount Total tracks available
-     * @property {any[]} tracks Tracks object
+     * @property {Song[]} tracks Tracks object
      */
 
     /**
      * @typedef {object} PlaylistParseOptions
      * @property {boolean} [fetchEmbed=false] If it should fetch embed
-     * @property {boolean} [removeUnknown=false] If it should remove unknown items from the playlist
      */
 
     /**
@@ -160,7 +159,7 @@ class Client {
      * @param {PlaylistParseOptions} options Playlist parser options
      * @returns {Promise<Playlist>}
      */
-    getPlaylist(url, options = { fetchEmbed: false, removeUnknown: false }) {
+    getPlaylist(url, options = { fetchEmbed: false }) {
         return new Promise(async (resolve, reject) => {
             if (!url || typeof url !== "string") return reject(new Error(`URL must be a string, received "${typeof url}"!`));
             if (!Util.validateURL(url, "playlist")) return reject(new TypeError("Invalid url!"));
@@ -177,8 +176,8 @@ class Client {
                 reject(new Error("Couldn't parse playlist data!"));
             }
 
-            const cleanFeed = !!options.removeUnknown ? section.filter(data => !!data.permalink_url && !!data.title) : section;
-
+            const cleanFeed = section.filter(data => data.id && data.title);
+            const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a)
             const info = {
                 id: parseInt($("meta[property=\"al:ios:url\"]").attr("content").split(":").pop()),
                 title: $('meta[property="og:title"]').attr("content"),
@@ -195,7 +194,37 @@ class Client {
                 embed: options && !!options.fetchEmbed ? await this.getEmbed($('link[type="text/json+oembed"]').attr("href")) : null,
                 genre: `${raw.split(',"genre":"')[1].split('"')[0]}`.replace(/\\u0026/g, "&"),
                 trackCount: parseInt(Util.last(raw.split(',"track_count":')).split(",")[0]),
-                tracks: cleanFeed
+                tracks: cleanFeed.map(m => new Song({
+                        id: m.id,
+                        title: m.title,
+                        description: m.description,
+                        thumbnail: m.artwork_url,
+                        url: m.permalink_url,
+                        duration: m.full_duration || m.duration,
+                        playCount: m.playback_count,
+                        commentsCount: m.comment_count,
+                        likes: m.likes_count,
+                        genre: m.genre,
+                        author: {
+                            name: m.user.full_name,
+                            username: m.user.permalink,
+                            url: m.user.permalink_url,
+                            avatarURL: m.user.avatar_url,
+                            urn: m.user.id,
+                            verified: !!m.user.verified,
+                            followers: 0,
+                            following: 0
+                        },
+                        publishedAt: new Date(m.created_at) || null,
+                        embedURL: null,
+                        embed: null,
+                        track: {
+                            hls: getMedia(m, "hls") ? getMedia(m, "hls").url : null,
+                            progressive: getMedia(m, "progressive").url
+                        },
+                        trackURL: getMedia(m, "progressive").url,
+                        comments: []
+                    }))
             };
 
             resolve(info);

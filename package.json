@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-scraper",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Scrape data from soundcloud easily.",
   "main": "index.js",
   "scripts": {
