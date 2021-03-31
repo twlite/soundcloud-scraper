@@ -205,7 +205,7 @@ declare interface Playlist {
     embed: Embed | null;
     genre: string;
     trackCount: number;
-    tracks: SimpleJSON[];
+    tracks: Song[];
 }
 
 declare interface SearchResult {
