@@ -68,13 +68,14 @@ class Client {
      * @param {boolean} [options.fetchEmbed=false] If it should fetch embed
      * @param {boolean} [options.fetchComments=false] If it should fetch comments
      * @param {boolean} [options.fetchStreamURL=false] If it should fetch stream url
+     * @param {RequestInit} [options.requestOptions={}] The request options
      * @returns {Promise<Song>}
      */
-    getSongInfo(url, options = { fetchEmbed: false, fetchComments: false, fetchStreamURL: false }) {
+    getSongInfo(url, options = { fetchEmbed: false, fetchComments: false, fetchStreamURL: false, requestOptions: {} }) {
         return new Promise(async (resolve, reject) => {
             if (typeof url !== "string") return reject(new TypeError(`URL type must be a string, received "${typeof url}"!`));
             if (!Util.validateURL(url, "track")) return reject(new TypeError("Invalid song url!"));
-            const raw = await Util.parseHTML(url, options);
+            const raw = await Util.parseHTML(url, options.requestOptions || {});
             if (!raw) return reject(new Error("Couldn't parse html!"));
             const $ = Util.loadHTML(raw);
 
