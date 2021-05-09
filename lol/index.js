@@ -40,7 +40,7 @@ const fs = require("fs");
 
 client.getPlaylist("https://soundcloud.com/ambreen-kanwal-397095258/sets/albert-vishi")
 .then(async playlist => {
-    console.log(playlist)
+    console.log(playlist.tracks[0].author)
     // const song = playlist.tracks[0];
     // const stream = await song.downloadProgressive();
     // const writer = stream.pipe(fs.createWriteStream(`./${song.title}.mp3`));
