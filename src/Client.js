@@ -74,18 +74,16 @@ class Client {
         return new Promise(async (resolve, reject) => {
             if (typeof url !== "string") return reject(new TypeError(`URL type must be a string, received "${typeof url}"!`));
             if (!Util.validateURL(url, "track")) return reject(new TypeError("Invalid song url!"));
-            const raw = await Util.parseHTML(url);
+            const raw = await Util.parseHTML(url, options);
             if (!raw) return reject(new Error("Couldn't parse html!"));
             const $ = Util.loadHTML(raw);
 
-            // <temporary>
             const duration = raw.split('<meta itemprop="duration" content="') && raw.split('<meta itemprop="duration" content="')[1] && raw.split('<meta itemprop="duration" content="')[1].split('" />')[0];
             const name = raw.split("<h1 itemprop=\"name\">") && raw.split("<h1 itemprop=\"name\">")[1].split("by <a")[1] && raw.split("<h1 itemprop=\"name\">")[1].split("by <a")[1].split(">")[1] && raw.split("<h1 itemprop=\"name\">")[1].split("by <a")[1].split(">")[1].split("</a>")[0].replace("</a", "")
             const trackURLBase = raw.split('},{"url":"')[1];
             let trackURL = null;
             if (trackURLBase) trackURL = trackURLBase.split('","')[0];
             const commentSection = raw.split("<section class=\"comments\">") && raw.split("<section class=\"comments\">")[1] ? raw.split("<section class=\"comments\">")[1].split("</section>")[0] : null
-            // </temporary>
 
             const obj = {
                 id: $("meta[property=\"al:ios:url\"]").attr("content").split(":").pop(),

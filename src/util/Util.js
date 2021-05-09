@@ -36,9 +36,9 @@ class Util {
             case "playlist":
                 return Constants.REGEX_SET.test(url);
             case "track":
-                return Constants.REGEX_TRACK.test(url);
+                return Constants.REGEX_TRACK.test(url) || url.match(/soundcloud.app.goo.gl/);
             default:
-                return Constants.SOUNDCLOUD_URL_REGEX.test(url);
+                return Constants.SOUNDCLOUD_URL_REGEX.test(url) || url.match(/soundcloud.app.goo.gl/);
         }
         
     }
@@ -61,7 +61,7 @@ class Util {
      */
     static parseHTML(url = null, options = {}) {
         return new Promise((resolve) => {
-            Util.request(url, options)
+            Util.request(url, { redirect: "follow", ...options })
                 .then(res => res.text())
                 .then(body => resolve(body))
                 .catch(() => resolve(""));
