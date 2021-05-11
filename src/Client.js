@@ -140,6 +140,7 @@ class Client {
      * @property {string} author.username Author username
      * @property {number} author.urn Author urn
      * @property {string} author.profile Author profile url
+     * @property {boolean} author.verified If the author is verified
      * @property {string} embedURL Embed url
      * @property {?Embed} embed Embed
      * @property {string} genre Playlist genre
