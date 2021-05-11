@@ -166,34 +166,36 @@ class Client {
             const raw = await Util.parseHTML(url);
             if (!raw) return reject(new Error("Couldn't parse html!"));
             const $ = Util.loadHTML(raw);
-            let section;
 
+            let section;
             try {
-                let data = Util.last(raw.split(',"tracks":')).split(',"track_count"')[0];
-                section = JSON.parse(data);
+                section = JSON.parse(`[{"id": ${raw.split(`{}})},[{"id":`)[1].split(");")[0]}`);
             } catch(e) {
-                reject(new Error("Couldn't parse playlist data!"));
+                throw new Error(`Could not parse playlist:\n${e.message}`);
             }
 
-            const cleanFeed = section.filter(data => data.id && data.title);
-            const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a)
+            const data = Util.last(section).data[0];
+            data.tracks = data.tracks.filter(data => data.id && data.title);
+            const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a);
+
             const info = {
-                id: parseInt($("meta[property=\"al:ios:url\"]").attr("content").split(":").pop()),
-                title: $('meta[property="og:title"]').attr("content"),
-                url: $('meta[property="og:url"]').attr("content"),
+                id: data.id,
+                title: data.title,
+                url: data.permalink_url,
                 description: $('meta[property="og:description"]').attr("content"),
-                thumbnail: $('meta[property="og:image"]').attr("content"),
+                thumbnail: data.artwork_url,
                 author: {
-                    profile: $('meta[property="soundcloud:user"]').attr("content"),
-                    username: $('meta[property="soundcloud:user"]').attr("content").split("/").pop(),
-                    name: raw.split(',"username":"')[1] && raw.split(',"username":"')[1].split('",')[0] || null,
-                    urn: parseInt(raw.split('soundcloud:users:')[1] && raw.split('soundcloud:users:')[1].split('",')[0])
+                    profile: data.user.permalink_url,
+                    username: data.user.permalink,
+                    name: data.user.username,
+                    urn: data.user.id,
+                    verified: Boolean(data.user.verified)
                 },
                 embedURL: $('link[type="text/json+oembed"]').attr("href"),
                 embed: options && !!options.fetchEmbed ? await this.getEmbed($('link[type="text/json+oembed"]').attr("href")) : null,
                 genre: `${raw.split(',"genre":"')[1].split('"')[0]}`.replace(/\\u0026/g, "&"),
-                trackCount: parseInt(Util.last(raw.split(',"track_count":')).split(",")[0]),
-                tracks: cleanFeed.map(m => new Song({
+                trackCount: data.track_count || 0,
+                tracks: data.tracks.map(m => new Song({
                         id: m.id,
                         title: m.title,
                         description: m.description,

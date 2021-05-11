@@ -34,9 +34,9 @@ class Util {
             case "artist":
                 return Constants.REGEX_ARTIST.test(url);
             case "playlist":
-                return Constants.REGEX_SET.test(url);
+                return Constants.REGEX_SET.test(url) || (url.match(/soundcloud.app.goo.gl/) && url.split("/").pop().length === 5);
             case "track":
-                return Constants.REGEX_TRACK.test(url) || url.match(/soundcloud.app.goo.gl/);
+                return Constants.REGEX_TRACK.test(url) || url.match(/soundcloud.app.goo.gl/) && url.split("/").pop().length > 5;
             default:
                 return Constants.SOUNDCLOUD_URL_REGEX.test(url) || url.match(/soundcloud.app.goo.gl/);
         }
