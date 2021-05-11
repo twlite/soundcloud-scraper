@@ -1,5 +1,5 @@
 # SoundCloud Scraper
-Scrape data from soundcloud easily.
+Get data from soundcloud easily.
 
 [![NPM](https://nodei.co/npm/soundcloud-scraper.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/soundcloud-scraper/)
 
