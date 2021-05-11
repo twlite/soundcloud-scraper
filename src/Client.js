@@ -111,10 +111,10 @@ class Client {
                 embedURL: $("link[type=\"text/json+oembed\"]").attr("href"),
                 embed: !!options.fetchEmbed ? await this.getEmbed($("link[type=\"text/json+oembed\"]").attr("href")) : null,
                 track: {
-                    hls: trackURL.replace("/progressive", "/hls"),
-                    progressive: trackURL
+                    hls: trackURL ? trackURL.replace("/progressive", "/hls") : null,
+                    progressive: trackURL || null
                 },
-                trackURL: trackURL,
+                trackURL: trackURL || null,
                 comments: !!options.fetchComments && !!commentSection ? Util.parseComments(commentSection) : []
             };
 
