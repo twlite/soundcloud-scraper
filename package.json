@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-scraper",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "Scrape data from soundcloud easily.",
   "main": "index.js",
   "scripts": {
@@ -32,8 +32,8 @@
   },
   "homepage": "https://soundcloud-scraper.js.org",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "m3u8stream": "^0.8.0",
+    "cheerio": "^1.0.0-rc.9",
+    "m3u8stream": "^0.8.3",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
