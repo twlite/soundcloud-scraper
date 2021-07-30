@@ -1,8 +1,9 @@
 {
   "name": "soundcloud-scraper",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Get data from soundcloud easily.",
   "main": "index.js",
+  "files": ["src", "index.js"],
   "scripts": {
     "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
     "docs:test": "docgen --source src --custom docs/index.yml",
