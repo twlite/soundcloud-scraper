@@ -37,6 +37,6 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "discord.js-docgen": "github:discordjs/docgen"
+    "@discordjs/docgen": "github:discordjs/docgen"
   }
 }
