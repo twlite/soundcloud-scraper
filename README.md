@@ -1,460 +1,287 @@
 # SoundCloud Scraper
-☁️ Simple package to parse data & download audio from soundcloud for free.
+Get data from soundcloud easily.
 
 [![NPM](https://nodei.co/npm/soundcloud-scraper.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/soundcloud-scraper/)
 
-## Installation
+# Installation
+
 ```sh
-npm install soundcloud-scraper --save
+$ npm i soundcloud-scraper
 ```
 
-# Features
-* Easy & simple
-* Fast
-* Custom search support
-* Soundcloud stream downloader
-* Soundcloud client id generator
+# Documentation
+**[https://soundcloud-scraper.js.org](https://soundcloud-scraper.js.org)**
 
-# Discord Support
-- **[AndrozDev](https://discord.gg/Qreejcu)**
-- **[Snowflake Studio ❄](https://discord.gg/VRsr5fv)**
+# Example
+## Downloading a Song
 
-## Example
-## Quick Example
+> Note: This process can take few seconds if you do not provide api key
+> because it will first find the api key and then fetch respective track url to get final stream url
+> and then download it. To solve this issue, first get your soundcloud key using `SoundCloud.keygen()` and then save it somewhere.
+> Later you can pass that key in `SoundCloud.Client` constructor: `new SoundCloud.Client("API_KEY")`.
+> SoundCloud Scraper automatically detects `SOUNDCLOUD_API_KEY` from `process.env`.
+
 ```js
-const scraper = require('soundcloud-scraper');
-
-console.log(scraper.validateURL('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release'));
-// true
-console.log(scraper.validateURL('https://google.com'));
-// false
-
-scraper.getSongInfo('https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release').then(console.log);
-/*
-{
-  title: 'Alan Walker - Fade [NCS Release]',
-  author: User {
-    name: 'NCS',
-    username: 'NCS',
-    followers: 1299289,
-    createdAt: 2012-04-29T12:00:22.000Z,
-    avatarURL: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-large.jpg',
-    profile: 'https://soundcloud.com/nocopyrightsounds'
-  },
-  description: 'Support on iTunes: http://smarturl.it/ncsuplifting\n' +
-    'Listen on Spotify: http://smarturl.it/ncsupliftingspotify\n' +
-    'Listen on YouTube: https://www.youtube.com/watch?v=bM7SZ5SBzyY\n',
-  duration: 264000,
-  genre: 'Electro House',
-  playCount: 42976273,
-  commentsCount: 16941,
-  likesCount: 616593,
-  thumbnail: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-t500x500.jpg',
-  publishedAt: 2014-11-19T16:40:24.000Z,
-  embed: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F177671751&auto_play=false&show_artwork=true&visual=true&origin=schema.org',
-  comments: [
-    {
-      content: '✌✌✌✌✌',
-      createdAt: 2020-08-14T17:56:45.000Z,
-      author: [User]
-    },
-    ...
-    }
-  ]
-}
-*/
-
-```
-
-## Downloading song
-```js
-const soundcloud = require("soundcloud-scraper");
+const SoundCloud = require("soundcloud-scraper");
+const client = new SoundCloud.Client();
 const fs = require("fs");
 
-soundcloud.download("https://soundcloud.com/nocopyrightsounds/alan-walker-fade-ncs-release")
-    .then(stream => {
-        stream.pipe(fs.createWriteStream("./fade.mp3"));  
-    });
-
+client.getSongInfo("https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite")
+    .then(async song => {
+        const stream = await song.downloadProgressive();
+        const writer = stream.pipe(fs.createWriteStream(`./${song.title}.mp3`));
+        writer.on("finish", () => {
+          console.log("Finished writing song!")
+          process.exit(1);
+        });
+    })
+    .catch(console.error);
 ```
 
-
-# API
-## getSongInfo(trackURL: string, options)
-This method returns informations related to the given track url.
-
-## getUserInfo(profileURL: string)
-This method returns user information of the given url.
-
-## getPlaylist(playListURL: string)
-This method returns songs array of the given playlist url.
-
-## search(query: string, type: string)
-This method can be used to search tracks, users, or playlists on soundcloud.
-
-## validateURL(url: string)
-This method validates soundcloud url.
-
-## getRecommendedSongs(trackURL: string)
-This method returns recommended tracks from the given track url.
-
-## fetchSoundcloudKey()
-This method fetches soundcloud api key. Returns `null` on error.
-
-## download(trackURL: string, clientID: string)
-This method downloads soundcloud stream. `trackURL` is required field. You can pass custom `clientID` if you have one.
-Else `soundcloud-scraper` will try to fetch `clientID` and download stream.
-
-## getUserLikes(profileURL: string, limit: number)
-This method fetches user likes and returns info.
-
-## fetchSoundcloudVersion()
-This method returns soundcloud api version.
-
-## getStore()
-This method returns cache of soundcloud scraper.
-
-## getStreamURL(songURL: string, clientID: string, parsedURL: boolean)
-This method returns actual stream url of the song. Set `parsedURL` to `true` if track url is parsed from song url.
-
-# Response Samples
+# Responses
 ## Song Info
 
+<details>
+<summary>👉 Preview Response</summary>
+
 ```js
-{
-  title: 'Alan Walker - Fade [NCS Release]',
-  author: User {
-    name: 'NCS',
-    username: 'NCS',
-    followers: 1299335,
-    createdAt: 2012-04-29T12:00:22.000Z,
-    avatarURL: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-large.jpg',
-    profile: 'https://soundcloud.com/nocopyrightsounds'
+Song {
+  id: '316547873',
+  title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD]',
+  description: 'FREE DOWNLOAD: http://discoverysounds.com/gate/alan-walker-feat-k-391-ignite\n' +
+    '\n' +
+    'Alan Walker Feat K 391 Ignite Download\n' +
+    'Alan Walker Feat K 391 Ignite Mp3 Download\n' +
+    'Alan Walker Feat K 391 Ignite New Song 2',
+  thumbnail: 'https://i1.sndcdn.com/artworks-000216694368-wsysn4-t500x500.jpg',
+  url: 'https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite',
+  duration: 210000,
+  playCount: '771664',
+  commentsCount: '371',
+  likes: '13514',
+  genre: 'Dance & EDM',
+  author: {
+    name: 'Doge Sounds',
+    username: 'dogesounds',
+    url: 'https://soundcloud.com/dogesounds',
+    avatarURL: 'https://i1.sndcdn.com/avatars-000304905983-a0568r-large.jpg',
+    urn: 298449071,
+    verified: false,
+    followers: 149,
+    following: 32
   },
-  description: 'Support on iTunes: http://smarturl.it/ncsuplifting\n' +
-    'Listen on Spotify: http://smarturl.it/ncsupliftingspotify\n' +
-    'Listen on YouTube: https://www.youtube.com/watch?v=bM7SZ5SBzyY\n',
-  duration: 264000,
-  genre: 'Electro House',
-  playCount: 42977691,
-  commentsCount: 16943,
-  likesCount: 616606,
-  thumbnail: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-t500x500.jpg',
-  publishedAt: 2014-11-19T16:40:24.000Z,
-  embed: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F177671751&auto_play=false&show_artwork=true&visual=true&origin=schema.org',
-  comments: [
-    {
-      content: '@user-812800306',
-      createdAt: 2020-08-15T08:01:37.000Z,
-      author: [User]
-    },
-    {
-      content: '@enzo-castro-263198533',
-      createdAt: 2020-08-15T07:55:08.000Z,
-      author: [User]
-    },
-    {
-      content: '✌✌✌✌✌',
-      createdAt: 2020-08-14T17:56:45.000Z,
-      author: [User]
-    },
-    {
-      content: 'nice',
-      createdAt: 2020-08-14T05:00:14.000Z,
-      author: [User]
-    },
-    {
-      content: 'i like',
-      createdAt: 2020-08-13T18:33:33.000Z,
-      author: [User]
-    },
-    {
-      content: 'jxpqux1phsoqhzlqjzoqjxqjz',
-      createdAt: 2020-08-13T16:30:46.000Z,
-      author: [User]
-    },
-    {
-      content: 'zakass',
-      createdAt: 2020-08-13T15:09:25.000Z,
-      author: [User]
-    },
-    {
-      content: 'REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
-      createdAt: 2020-08-13T15:04:10.000Z,
-      author: [User]
-    },
-    {
-      content: 'well done',
-      createdAt: 2020-08-13T10:40:09.000Z,
-      author: [User]
-    },
-    {
-      content: 'para gemers',
-      createdAt: 2020-08-13T10:11:47.000Z,
-      author: [User]
-    },
-    {
-      content: 'EXCELENTE',
-      createdAt: 2020-08-13T10:01:14.000Z,
-      author: [User]
-    },
-    {
-      content: 'My Bst Song',
-      createdAt: 2020-08-13T05:10:18.000Z,
-      author: [User]
-    },
-    {
-      content: 'tyt',
-      createdAt: 2020-08-13T05:09:46.000Z,
-      author: [User]
-    },
-    {
-      content: 'the best song',
-      createdAt: 2020-08-12T23:47:07.000Z,
-      author: [User]
-    },
-    {
-      content: 'Why is there a gap here?',
-      createdAt: 2020-08-12T22:20:01.000Z,
-      author: [User]
-    },
-    {
-      content: 'Great Music',
-      createdAt: 2020-08-12T13:03:08.000Z,
-      author: [User]
-    },
-    {
-      content: '♥♥♥♥♥♥',
-      createdAt: 2020-08-11T19:06:06.000Z,
-      author: [User]
-    },
-    {
-      content: 'amazing',
-      createdAt: 2020-08-11T18:12:37.000Z,
-      author: [User]
-    },
-    {
-      content: '@user-311302874 on other one really you are a robot made to tap kids and bait them into getting a virus on their device',
-      createdAt: 2020-08-11T18:09:13.000Z,
-      author: [User]
-    },
-    {
-      content: 'hello',
-      createdAt: 2020-08-11T17:54:44.000Z,
-      author: [User]
-    },
-    {
-      content: 'memorys',
-      createdAt: 2020-08-11T13:31:56.000Z,
-      author: [User]
-    },
-    {
-      content: 'memorys',
-      createdAt: 2020-08-11T13:31:56.000Z,
-      author: [User]
-    },
-    {
-      content: 'great',
-      createdAt: 2020-08-11T10:45:28.000Z,
-      author: [User]
-    },
-    {
-      content: 'بدر',
-      createdAt: 2020-08-11T10:04:49.000Z,
-      author: [User]
-    },
-    {
-      content: 'love it',
-      createdAt: 2020-08-11T01:40:56.000Z,
-      author: [User]
-    },
-    {
-      content: 'Love ❤',
-      createdAt: 2020-08-10T16:51:56.000Z,
-      author: [User]
-    },
-    {
-      content: 'Nice',
-      createdAt: 2020-08-10T16:49:19.000Z,
-      author: [User]
-    },
-    {
-      content: 'solo the best',
-      createdAt: 2020-08-10T14:16:20.000Z,
-      author: [User]
-    },
-    {
-      content: 'ffdddddfgrdgrdgtr',
-      createdAt: 2020-08-09T20:47:30.000Z,
-      author: [User]
-    },
-    {
-      content: 'eeeee',
-      createdAt: 2020-08-09T20:47:12.000Z,
-      author: [User]
-    }
-  ]
+  publishedAt: 2017-04-07T11:02:54.000Z,
+  embedURL: 'https://soundcloud.com/oembed?url=https%3A%2F%2Fsoundcloud.com%2Fdogesounds%2Falan-walker-feat-k-391-ignite&format=json',
+  embed: null,
+  streams: {
+    hls: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/hls',
+    progressive: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/progressive'
+  },
+  trackURL: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:316547873/7ccfb0e4-2d57-4f9b-b5df-9d340a3a2dd6/stream/progressive',
+  comments: [],
+  streamURL: null
 }
-
 ```
+</details>
 
-## Search Result
+## Song Embed
+
+<details>
+<summary>👉 Preview Response</summary>
+
+```js
+Embed {
+  url: 'https://soundcloud.com/oembed?url=https%3A%2F%2Fsoundcloud.com%2Fdogesounds%2Falan-walker-feat-k-391-ignite&format=json',
+  version: 1,
+  type: 'rich',
+  provider: { name: 'SoundCloud', url: 'https://soundcloud.com' },
+  height: 400,
+  width: '100%',
+  title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD] by Doge Sounds',
+  description: 'FREE DOWNLOAD: http://discoverysounds.com/gate/alan-walker-feat-k-391-ignite\n' +
+    '\n' +
+    'Alan Walker Feat K 391 Ignite Download\n' +
+    'Alan Walker Feat K 391 Ignite Mp3 Download\n' +
+    'Alan Walker Feat K 391 Ignite New Song 2017\n' +
+    'Alan Walker Feat K 391 Ignite 2017',
+  author: { name: 'Doge Sounds', url: 'https://soundcloud.com/dogesounds' },
+  thumbnailURL: 'https://i1.sndcdn.com/artworks-000216694368-wsysn4-t500x500.jpg'
+}
+```
+</details>
+
+## Song Comments
+
+<details>
+<summary>👉 Preview Response</summary>
 
 ```js
 [
   {
-    url: 'https://soundcloud.com/odesza/zhu-faded-odesza-remix',
-    title: 'ZHU - Faded (ODESZA Remix) - Out June 29 on Mind of a Genius',
-    type: 'track'
+    text: '����',
+    createdAt: 2020-10-30T11:58:13.000Z,
+    author: {
+      name: 'askaria22',
+      username: 'mohamed-askaria-541170196',
+      url: 'https://soundcloud.com/mohamed-askaria-541170196'
+    }
   },
   {
-    url: 'https://soundcloud.com/osiasmusic/alan-walker-faded-osias-trap-remix',
-    title: 'Alan Walker - Faded (Osias Trap Remix)',
-    type: 'track'
+    text: 'Cool',
+    createdAt: 2020-10-28T15:03:21.000Z,
+    author: {
+      name: 'Matias Ronkainen',
+      username: 'matias-ronkainen',
+      url: 'https://soundcloud.com/matias-ronkainen'
+    }
   },
   {
-    url: 'https://soundcloud.com/djsnake/zhu-dj-snake-dj-mustard-faded-20',
-    title: 'Zhu - Dj Snake - Dj Mustard "Faded 2.0"',
-    type: 'track'
+    text: 'wow nice song i love the beat',
+    createdAt: 2020-10-27T05:35:39.000Z,
+    author: {
+      name: 'saathvika vempati',
+      username: 'saathvika-vempati',
+      url: 'https://soundcloud.com/saathvika-vempati'
+    }
   },
   {
-    url: 'https://soundcloud.com/sheshizm2/alan-walker-faded-original-copy',
-    title: 'Alan Walker - Faded || ( Medium Quality )',
-    type: 'track'
+    text: 'tempik',
+    createdAt: 2020-10-23T04:49:11.000Z,
+    author: {
+      name: 'didik8336@gmail.com',
+      username: 'didik-saputra-908291434',
+      url: 'https://soundcloud.com/didik-saputra-908291434'
+    }
   },
   {
-    url: 'https://soundcloud.com/nickraymondg/zhu-faded',
-    title: 'ZHU - Faded',
-    type: 'track'
+    text: '@jazmine-powers-328939011: ew chain mail',
+    createdAt: 2020-10-21T18:40:33.000Z,
+    author: {
+      name: 'FallenQbjYT',
+      username: 'fallen-qbj',
+      url: 'https://soundcloud.com/fallen-qbj'
+    }
   },
-  {
-    url: 'https://soundcloud.com/actually_martin/faded-prod-by-sp-the-producer',
-    title: 'Faded',
-    type: 'track'
-  },
-  {
-    url: 'https://soundcloud.com/tink_g/2-faded-qz57a1809171',
-    title: 'Faded',
-    type: 'track'
-  },
-  {
-    url: 'https://soundcloud.com/jimmyprime/faded',
-    title: 'Faded',
-    type: 'track'
-  },
-  {
-    url: 'https://soundcloud.com/vintageculturemusic/zhu-faded-vintage-culture-zerb-remix',
-    title: 'Zhu - Faded (Vintage Culture &amp; Zerb Remix)',
-    type: 'track'
-  },
-  {
-    url: 'https://soundcloud.com/rickyxsan/faded',
-    title: 'Faded',
-    type: 'track'
-  }
+  ...
 ]
-
 ```
-
-## Playlist
-
-```js
-[
-  {
-    title: 'Alan walker (play for me&amp;unity&amp;faded&amp;alone) (mix).mp3',
-    url: 'https://soundcloud.com//zizozero12/alan-walker-play-for-meunityfadedalone-mixmp3',
-    publishedAt: 2019-10-29T10:44:53.000Z,
-    duration: 163000,
-    genre: [ 'Electronic' ],
-    author: User {
-      name: 'abdo',
-      username: 'abdo',
-      followers: 0,
-      createdAt: null,
-      avatarURL: null,
-      profile: 'https://soundcloud.com//zizozero12'
-    }
-  },
-  {
-    title: 'Alan Walker, K-391 &amp; Emelie Hollow - Lily (original mix) ❤️. Mp3',
-    url: 'https://soundcloud.com//zizozero12/alan-walker-k-391-emelie-hollow-lily-lyrics',
-    publishedAt: 2019-01-29T12:04:36.000Z,
-    duration: 178000,
-    genre: [ 'Dance', 'EDM' ],
-    author: User {
-      name: 'abdo',
-      username: 'abdo',
-      followers: 0,
-      createdAt: null,
-      avatarURL: null,
-      profile: 'https://soundcloud.com//zizozero12'
-    }
-  },
-  {
-    title: 'Alanwalker Darkside(originalmix).mp3',
-    url: 'https://soundcloud.com//zizozero12/alanwalker-darkside',
-    publishedAt: 2018-08-08T21:18:24.000Z,
-    duration: 188000,
-    genre: [],
-    author: User {
-      name: 'abdo',
-      username: 'abdo',
-      followers: 0,
-      createdAt: null,
-      avatarURL: null,
-      profile: 'https://soundcloud.com//zizozero12'
-    }
-  },
-  {
-    title: 'Alan Walker - Do It All For You (ft. Trevor Guthrie)mp3',
-    url: 'https://soundcloud.com//zizozero12/lkkkk-mp3',
-    publishedAt: 2019-09-25T13:30:24.000Z,
-    duration: 166000,
-    genre: [],
-    author: User {
-      name: 'abdo',
-      username: 'abdo',
-      followers: 0,
-      createdAt: null,
-      avatarURL: null,
-      profile: 'https://soundcloud.com//zizozero12'
-    }
-  },
-  {
-    title: 'AlanWalker_Ft_Ava_Max_-_Alone_Pt_II',
-    url: 'https://soundcloud.com//zizozero12/alan_walker_ft_ava_max_alone_pt_ii-2',
-    publishedAt: 2019-12-29T23:08:28.000Z,
-    duration: 194000,
-    genre: [ 'Dance', 'EDM' ],
-    author: User {
-      name: 'abdo',
-      username: 'abdo',
-      followers: 0,
-      createdAt: null,
-      avatarURL: null,
-      profile: 'https://soundcloud.com//zizozero12'
-    }
-  }
-]
-
-```
+</details>
 
 ## User Info
 
+<details>
+<summary>👉 Preview Response</summary>
+
 ```js
-User {
-  name: 'NCS',
-  username: 'NCS',
-  followers: 1299336,
-  createdAt: 2012-04-29T12:00:22.000Z,
-  avatarURL: 'https://i1.sndcdn.com/avatars-000703438633-4jlywq-large.jpg',
-  profile: 'https://soundcloud.com/nocopyrightsounds'
+{
+  urn: 298449071,
+  username: 'dogesounds',
+  name: 'Doge Sounds',
+  verified: false,
+  createdAt: 2017-03-29T21:35:45.000Z,
+  avatarURL: 'https://i1.sndcdn.com/avatars-000304905983-a0568r-large.jpg',
+  profile: 'https://soundcloud.com/dogesounds',
+  bannerURL: 'https://i1.sndcdn.com/visuals-000298449071-KhchhU-original.jpg',
+  followers: 149,
+  following: 32,
+  likesCount: 6,
+  tracksCount: 2,
+  tracks: [
+    {
+      title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD]',
+      url: 'https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite',
+      publishedAt: 2017-04-07T11:02:54.000Z,
+      genre: 'Dance & EDM',
+      author: 'dogesounds',
+      duration: 210000
+    },
+    {
+      title: 'W&W & Daddy Yankee - Gasolina (Hardwell Mashup) [FREE DOWNLOAD]',
+      url: 'https://soundcloud.com/dogesounds/ww-daddy-yankee-gasolina-hardwell-mashup',
+      publishedAt: 2017-03-29T21:38:38.000Z,
+      genre: 'Dance & EDM',
+      author: 'dogesounds',
+      duration: 267000
+    }
+  ],
+  likes: [
+    {
+      title: 'Alan Walker feat. K-391 - Ignite [FREE DOWNLOAD]',
+      url: 'https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite',
+      publishedAt: 2017-04-07T11:02:54.000Z,
+      genre: 'Dance & EDM',
+      author: {
+        name: 'Doge Sounds',
+        username: 'dogesounds',
+        profile: 'https://soundcloud.com/dogesounds'
+      }
+    },
+    {
+      title: 'W&W & Daddy Yankee - Gasolina (Hardwell Mashup) [FREE DOWNLOAD]',
+      url: 'https://soundcloud.com/dogesounds/ww-daddy-yankee-gasolina-hardwell-mashup',
+      publishedAt: 2017-03-29T21:38:38.000Z,
+      genre: 'Dance & EDM',
+      author: {
+        name: 'Doge Sounds',
+        username: 'dogesounds',
+        profile: 'https://soundcloud.com/dogesounds'
+      }
+    }
+  ]
 }
-
 ```
 
-## API key
+</details>
 
-```xl
-dadbfccf377e10e4046853ef5ab4e9g5
+## Playlist
+
+<details>
+<summary>👉 Preview Response</summary>
+
+```js
+{
+  id: 1001644540,
+  title: 'albert vishi',
+  url: 'https://soundcloud.com/ambreen-kanwal-397095258/sets/albert-vishi',
+  description: 'Listen to albert vishi by Ambreen Kanwal #np on #SoundCloud',
+  thumbnail: 'https://i1.sndcdn.com/artworks-y5WKIPZcAx2gKBSU-UGgDzA-t500x500.jpg',
+  author: {
+    profile: 'https://soundcloud.com/ambreen-kanwal-397095258',
+    username: 'ambreen-kanwal-397095258',
+    name: 'Ambreen Kanwal',
+    urn: 311943633
+  },
+  embedURL: 'https://soundcloud.com/oembed?url=https%3A%2F%2Fsoundcloud.com%2Fambreen-kanwal-397095258%2Fsets%2Falbert-vishi&format=json',
+  embed: null,
+  genre: '',
+  trackCount: 54,
+  tracks: [
+    Song {
+      id: 754856170,
+      title: 'Albert Vishi Ft. Ane Flem - Zombie (The Cranberries Cover In Alan Walker Style)',
+      description: null,
+      thumbnail: 'https://i1.sndcdn.com/artworks-y5WKIPZcAx2gKBSU-UGgDzA-large.jpg',
+      url: 'https://soundcloud.com/albertvishi/albert-vishi-ft-ane-flem-zombie-the-cranberries-cover-in-alan-walker-style',
+      duration: 252056,
+      playCount: 138735,
+      commentsCount: 52,
+      likes: 2174,
+      genre: 'Dance & EDM',
+      author: [Object],
+      publishedAt: 2020-02-04T11:41:24.000Z,
+      embedURL: null,
+      embed: null,
+      streams: [Object],
+      trackURL: 'https://api-v2.soundcloud.com/media/soundcloud:tracks:754856170/8a6b90d7-59fc-4669-baa6-c7e53d45a6ef/stream/progressive',
+      comments: [],
+      streamURL: null
+    },
+    ...
+  ]
+}
 ```
+
+</details>
+
+# Join Our Discord Server
+[![](https://i.imgur.com/f6hNUfc.png)](https://discord.gg/2SUybzb)

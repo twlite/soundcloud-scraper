@@ -1,0 +1,20 @@
+- name: Examples
+  files:
+    - name: Download
+      path: download.js
+- name: General
+  files:
+    - name: Welcome
+      path: welcome.md
+- name: Response
+  files:
+    - name: Song Info
+      path: songinfo.md
+    - name: User Info
+      path: userinfo.md
+    - name: Embed
+      path: embed.md
+    - name: Comments
+      path: comments.md
+    - name: Playlist
+      path: playlist.md

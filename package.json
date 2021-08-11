@@ -1,44 +1,43 @@
 {
   "name": "soundcloud-scraper",
-  "version": "3.0.4",
-  "description": "Get resource data (songs, playlists, etc.) from a SoundCloud URL.",
+  "version": "5.0.1",
+  "description": "Get data from soundcloud easily.",
   "main": "index.js",
+  "files": ["src", "index.js"],
+  "scripts": {
+    "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
+    "docs:test": "docgen --source src --custom docs/index.yml",
+    "test": "cd test && node index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DevSnowflake/soundcloud-scraper.git"
   },
-  "author": "Snowflake Studio ❄",
+  "keywords": [
+    "soundcloud",
+    "scraper",
+    "api",
+    "data",
+    "soundcloud-api",
+    "download",
+    "key",
+    "soundcloud-api-key",
+    "soundcloud-downloader",
+    "soundcloud-download",
+    "music"
+  ],
+  "author": "Androz2091",
   "license": "MIT",
-  "types": "./typings/index.d.ts",
-  "exports": {
-    ".": [
-      {
-        "require": "./index.js",
-        "import": "./esm/index.mjs"
-      },
-      "./index.js"
-    ],
-    "./esm": "./esm/index.mjs"
-  },
-  "dependencies": {
-    "jsdom": "^16.4.0",
-    "node-fetch": "^2.6.0"
-  },
   "bugs": {
     "url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
   },
-  "homepage": "https://github.com/DevSnowflake/soundcloud-scraper#readme",
-  "scripts": {
-    "test": "cd test && node index.js"
+  "homepage": "https://soundcloud-scraper.js.org",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "m3u8stream": "^0.8.4",
+    "node-fetch": "^2.6.1"
   },
-  "keywords": [
-    "soundcloud",
-    "soundcloud-downloader",
-    "soundcloud-scraper",
-    "soundcloud-song-downloader",
-    "soundcloud-api"
-  ],
   "devDependencies": {
-    "discord-ytdl-core": "^4.0.9"
+    "@discordjs/docgen": "github:discordjs/docgen"
   }
 }
