@@ -223,7 +223,7 @@ export class Song {
 export namespace Util {
 	function fetchSongStreamURL(songURL: string, clientID: string): Promise<string>;
 	function keygen(force?: boolean): Promise<string>;
-	function last(arr: any[]): void;
+	function last<T>(arr: T[]): T;
 	function loadHTML(html: string): CheerioAPI;
 	function parseComments(commentSection: string): Comment[];
 	function parseDuration(duration: string): number;
