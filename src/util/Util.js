@@ -59,13 +59,14 @@ class Util {
      * @param {RequestInit} options Request options
      * @returns {Promise<string>}
      */
-    static parseHTML(url = null, options = {}) {
-        return new Promise((resolve) => {
-            Util.request(url, { redirect: "follow", ...options })
-                .then(res => res.text())
-                .then(body => resolve(body))
-                .catch(() => resolve(""));
-        });
+    static async parseHTML(url = null, options = {}) {
+        try {
+            const res = await Util.request(url, { redirect: "follow", ...options });
+            const body = await res.text();
+            return body;
+        } catch {
+            return "";
+        }
     }
 
     /**
@@ -143,32 +144,30 @@ class Util {
      * @param {?string} clientID Soundcloud client id
      * @returns {Promise<string>}
      */
-    static fetchSongStreamURL(songURL, clientID) {
-        return new Promise(async (resolve, reject) => {
-            if (!songURL) return reject("ERROR_NO_URL");
-            if (!clientID && Store.has("SOUNDCLOUD_API_KEY")) clientID = Store.get("SOUNDCLOUD_API_KEY");
-            const CLIENT_ID = clientID ? clientID : await Util.keygen();
-            if (!CLIENT_ID) return reject(new Error("Client id not found"));
+    static async fetchSongStreamURL(songURL, clientID) {
+        if (!songURL) throw new Error("ERROR_NO_URL");
+        if (!clientID && Store.has("SOUNDCLOUD_API_KEY")) clientID = Store.get("SOUNDCLOUD_API_KEY");
+        const CLIENT_ID = clientID ? clientID : await Util.keygen();
+        if (!CLIENT_ID) throw new Error("Client id not found");
 
-            try {
-                let res = await Util.request(`${songURL}?client_id=${CLIENT_ID}`, {
-                    headers: Constants.STREAM_FETCH_HEADERS,
-                    redirect: "manual"
-                });
-                if (res.status !== 200) {
-                    const hasError = Constants.STREAM_ERRORS[`${res.status}`];
-                    if (!!hasError) return reject(new Error(`[Code: ${res.status}] ${hasError}`));
-                    return reject(new Error(`[Code: ${res.status}] Rejected with status code "${res.status}"!`));
-                };
-                res = await res.json();
-                if (!res.url) return reject(new Error("Couldn't find stream url"));
+        try {
+            let res = await Util.request(`${songURL}?client_id=${CLIENT_ID}`, {
+                headers: Constants.STREAM_FETCH_HEADERS,
+                redirect: "manual"
+            });
+            if (res.status !== 200) {
+                const hasError = Constants.STREAM_ERRORS[`${res.status}`];
+                if (!!hasError) throw new Error(`[Code: ${res.status}] ${hasError}`);
+                throw new Error(`[Code: ${res.status}] Rejected with status code "${res.status}"!`);
+            };
+            res = await res.json();
+            if (!res.url) throw new Error("Couldn't find stream url");
 
-                resolve(res.url);
+            return res.url;
 
-            } catch(e) {
-                reject(new Error("Stream parse failed!"));
-            }
-        });
+        } catch (e) {
+            throw new Error("Stream parse failed!");
+        }
     }
 
     /**
@@ -176,45 +175,43 @@ class Util {
      * @param {boolean} [force=false] Forcefully parse soundcloud key
      * @returns {Promise<?string>}
      */
-    static keygen(force = false) {
-        return new Promise(async resolve => {
-            if (Store.has("SOUNDCLOUD_API_KEY") && !force) return resolve(Store.get("SOUNDCLOUD_API_KEY"));
-            try {
-                const html = await Util.parseHTML(Constants.SOUNDCLOUD_BASE_URL);
-                const res = html.split('<script crossorigin src="');
-                const urls = [];
-                let index = 0;
-                let key;
+    static async keygen(force = false) {
+        if (Store.has("SOUNDCLOUD_API_KEY") && !force) return Store.get("SOUNDCLOUD_API_KEY");
+        try {
+            const html = await Util.parseHTML(Constants.SOUNDCLOUD_BASE_URL);
+            const res = html.split('<script crossorigin src="');
+            const urls = [];
+            let index = 0;
+            let key;
 
-                res.forEach(u => {
-                    let url = u.replace('"></script>', "");
-                    let chunk = url.split("\n")[0];
-                    if (Constants.SOUNDCLOUD_KEYGEN_URL_REGEX.test(chunk)) {
-                        urls.push(chunk);
-                    };
-                });
-
-                while (index !== urls.length && !key) {
-                    let url = urls[index];
-                    index++;
-                    if (Constants.SOUNDCLOUD_API_KEY_REGEX.test(url)) {
-                        const data = await Util.parseHTML(url);
-                        if (data.includes(',client_id:"')) {
-                            const a = data.split(',client_id:"');
-                            key = a[1].split('"')[0];
-                            if (index === urls.length) {
-                                Store.set("SOUNDCLOUD_API_KEY", key);
-                                return resolve(Store.get("SOUNDCLOUD_API_KEY"));
-                            };
-                        }
-                    }
+            res.forEach(u => {
+                let url = u.replace('"></script>', "");
+                let chunk = url.split("\n")[0];
+                if (Constants.SOUNDCLOUD_KEYGEN_URL_REGEX.test(chunk)) {
+                    urls.push(chunk);
                 };
+            });
 
-            } catch(e) {
-                console.error(e)
-                resolve(null);
-            }
-        });
+            while (index !== urls.length && !key) {
+                let url = urls[index];
+                index++;
+                if (Constants.SOUNDCLOUD_API_KEY_REGEX.test(url)) {
+                    const data = await Util.parseHTML(url);
+                    if (data.includes(',client_id:"')) {
+                        const a = data.split(',client_id:"');
+                        key = a[1].split('"')[0];
+                        if (index === urls.length) {
+                            Store.set("SOUNDCLOUD_API_KEY", key);
+                            return Store.get("SOUNDCLOUD_API_KEY");
+                        };
+                    }
+                }
+            };
+
+        } catch (e) {
+            console.error(e)
+            return null;
+        }
     }
 
 }

@@ -184,7 +184,7 @@ class Song {
         const streamURL = url && typeof url === "string" ? url : null;
         if (!streamURL) throw new Error("Couldn't parse stream url");
 
-        return await Downloader.downloadHLS(streamURL, options);
+        return Downloader.downloadHLS(streamURL, options);
     }
 
     /**
@@ -198,7 +198,7 @@ class Song {
         const streamURL = s_url && typeof s_url === "string" ? s_url : null;
         if (!streamURL) throw new Error("Couldn't parse stream url");
 
-        return await Downloader.downloadProgressive(streamURL, options);
+        return Downloader.downloadProgressive(streamURL, options);
     }
 
     /**

@@ -166,7 +166,7 @@ export class Client {
 export class Downloader {
 	constructor();
 
-	downloadHLS(url: string, options?: m3u8Options): Promise<m3u8Stream>;
+	downloadHLS(url: string, options?: m3u8Options): m3u8Stream;
 	downloadProgressive(url: string, options?: RequestOptions): Promise<IncomingMessage>;
 }
 
