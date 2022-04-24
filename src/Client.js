@@ -174,13 +174,14 @@ class Client {
                 const $ = Util.loadHTML(raw);
 
                 let section;
-                try {
-                    section = JSON.parse(`[{"id": ${raw.split(`{}})},[{"id":`)[1].split(");")[0]}`);
-                } catch(e) {
-                    throw new Error(`Could not parse playlist:\n${e.message}`);
-                }
+                    try {
+                section = JSON.parse(`{"hydratable":"playlist" ${raw.split(`},{"hydratable":"playlist"`)[1].split(`"}}];`)[0] + `"}}`}`);
+            } catch(e) {
+                throw new Error(`Could not parse playlist:\n${e.message}`);
+            }
 
-                const data = Util.last(section).data[0];
+            
+            const data = section.data;
                 data.tracks = data.tracks.filter(data => data.id && data.title);
                 const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a);
 
