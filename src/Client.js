@@ -175,13 +175,23 @@ class Client {
 
                 let section;
                 try {
-                    section = JSON.parse(`[{"id": ${raw.split(`{}})},[{"id":`)[1].split(");")[0]}`);
+                    section = JSON.parse(raw.split('window.__sc_hydration = ')[1].split(';</script>')[0]);
                 } catch(e) {
                     throw new Error(`Could not parse playlist:\n${e.message}`);
                 }
 
-                const data = Util.last(section).data[0];
-                data.tracks = data.tracks.filter(data => data.id && data.title);
+                const data = Util.last(section).data;
+
+                const otherTrackIds = data.tracks.filter(data => data.id && !data.title).map(e=>e.id);
+
+                await this.createAPIKey();
+
+                const apiUrl = 'https://api-v2.soundcloud.com/tracks?client_id='+Store.get("SOUNDCLOUD_API_KEY")+'&ids='+otherTrackIds.join(",");
+
+                const res = await request(apiUrl);
+                const otherTracks = await res.json();
+
+                data.tracks = data.tracks.filter(data => data.id && data.title).concat(otherTracks);
                 const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a);
 
                 const info = {
