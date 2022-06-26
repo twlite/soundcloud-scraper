@@ -188,10 +188,10 @@ class Client {
 
                 const apiUrl = 'https://api-v2.soundcloud.com/tracks?client_id='+Store.get("SOUNDCLOUD_API_KEY")+'&ids='+otherTrackIds.join(",");
 
-                const res = await request(apiUrl);
+                const res = await Util.request(apiUrl);
                 const otherTracks = await res.json();
 
-                data.tracks = data.tracks.filter(data => data.id && data.title).concat(otherTracks);
+                data.tracks = data.tracks.concat(otherTracks).filter(data => data.id && data.title);
                 const getMedia = (m, a) => m.media.transcodings.find(x => x.format.protocol === a);
 
                 const info = {
@@ -223,13 +223,13 @@ class Client {
                             likes: m.likes_count,
                             genre: m.genre,
                             author: {
-                                name: m.user.full_name,
+                                name: m.user.username,
                                 username: m.user.permalink,
                                 url: m.user.permalink_url,
                                 avatarURL: m.user.avatar_url,
                                 urn: m.user.id,
-                                verified: !!m.user.verified,
-                                followers: 0,
+                                verified: !!m.user.badges?.verified,
+                                followers: m.user.followers_count,
                                 following: 0
                             },
                             publishedAt: new Date(m.created_at) || null,

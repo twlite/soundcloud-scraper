@@ -1,7 +1,7 @@
 const soundcloud = require("../index.js");
-const ytdl = require("discord-ytdl-core");
-const URL = "https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite";
-const fs = require("fs");
+// const ytdl = require("discord-ytdl-core");
+// const URL = "https://soundcloud.com/dogesounds/alan-walker-feat-k-391-ignite";
+// const fs = require("fs");
 
 // fetch stream url
 // soundcloud.getStreamURL(URL)
@@ -21,5 +21,9 @@ const fs = require("fs");
 //             });
 //     });
 
-soundcloud.getSongInfo(URL)
-    .then(console.log)
+// soundcloud.getSongInfo(URL)
+    // .then(console.log)
+
+const client = new soundcloud.Client()
+client.getPlaylist("https://soundcloud.com/dillon-weir-448457642/sets/alan-walker")
+    .then(x => console.log(x.tracks))
