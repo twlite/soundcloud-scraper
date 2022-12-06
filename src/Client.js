@@ -237,9 +237,9 @@ class Client {
                             embed: null,
                             track: {
                                 hls: getMedia(m, "hls") ? getMedia(m, "hls").url : null,
-                                progressive: getMedia(m, "progressive").url
+                                progressive: getMedia(m, "progressive") ? getMedia(m, "progressive").url : null
                             },
-                            trackURL: getMedia(m, "progressive").url,
+                            trackURL: getMedia(m, "progressive") ? getMedia(m, "progressive").url : null,
                             comments: []
                         }))
                 };
