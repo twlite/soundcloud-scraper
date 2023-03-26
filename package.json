@@ -1,48 +1,38 @@
 {
-	"name": "soundcloud-scraper",
-	"version": "5.0.3",
-	"description": "Get data from soundcloud easily.",
-	"main": "index.js",
-	"files": [
-		"src",
-		"index.js",
-		"index.d.ts"
-	],
-	"typings": "index.d.ts",
-	"scripts": {
-		"docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
-		"docs:test": "docgen --source src --custom docs/index.yml",
-		"test": "cd test && node index.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/DevSnowflake/soundcloud-scraper.git"
-	},
-	"keywords": [
-		"soundcloud",
-		"scraper",
-		"api",
-		"data",
-		"soundcloud-api",
-		"download",
-		"key",
-		"soundcloud-api-key",
-		"soundcloud-downloader",
-		"soundcloud-download",
-		"music"
-	],
-	"author": "Androz2091",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/DevSnowflake/soundcloud-scraper/issues"
-	},
-	"homepage": "https://soundcloud-scraper.js.org",
-	"dependencies": {
-		"cheerio": "^1.0.0-rc.10",
-		"m3u8stream": "^0.8.4",
-		"node-fetch": "^2.6.1"
-	},
-	"devDependencies": {
-		"@discordjs/docgen": "github:discordjs/docgen"
-	}
+  "name": "soundcloud-scraper",
+  "description": "Get data from soundcloud easily",
+  "version": "6.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "scripts": {
+    "test": "cd test && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skdhg/soundcloud-scraper.git"
+  },
+  "keywords": [
+    "soundcloud",
+    "api",
+    "data",
+    "scraper",
+    "node"
+  ],
+  "author": "skdhg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skdhg/soundcloud-scraper/issues"
+  },
+  "homepage": "https://github.com/skdhg/soundcloud-scraper#readme",
+  "dependencies": {
+    "isomorphic-unfetch": "^4.0.2",
+    "node-html-parser": "^6.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.10",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.2"
+  },
+  "packageManager": "yarn@3.5.0"
 }

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "strictNullChecks": true,
+        "pretty": true,
+        "removeComments": true,
+        "outDir": "dist",
+        "noEmit": true,
+        "declaration": true,
+        "target": "ES2017",
+        "module": "CommonJS",
+        "newLine": "lf",
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["./src"]
+}
