@@ -10,5 +10,6 @@ export default defineConfig({
     outDir: 'dist',
     target: 'node14',
     silent: true,
+    clean: true,
     sourcemap: false
 });
