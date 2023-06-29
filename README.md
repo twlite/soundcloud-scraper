@@ -1,3 +1,7 @@
+> **Note**
+> 
+> This module is archived in favor of https://github.com/Tenpi/soundcloud.ts
+
 # SoundCloud Scraper
 Get data from soundcloud easily.
 
